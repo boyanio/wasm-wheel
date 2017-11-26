@@ -5,7 +5,7 @@
         "name": "Boyan Mihaylov",
         "url": "https://boyan.io"
     },
-    "license": "MIT License",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/boyanio/wasm-wheel.git"
