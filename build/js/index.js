@@ -1,9 +1,9 @@
 (function() {
     "use strict";
 
-    const utf8ToString = (heap, pointer) => {
+    const utf8ToString = (heap, offset) => {
         let s = '';
-        for (let i = pointer; heap[i]; i++) {
+        for (let i = offset; heap[i]; i++) {
             s += String.fromCharCode(heap[i]);
         }
         return s;
@@ -17,17 +17,19 @@
             const wasmPromises = data.wasmFiles.map(wasmFile =>
                 fetch(`wasm/${wasmFile}`)
                 .then(response => response.arrayBuffer())
-                .then(bytes => {
-                    const memory = new WebAssembly.Memory({ initial: 10, maximum: 100 });
-                    const hello = pointer => {
-                        const heap = new Uint8Array(memory.buffer);
-                        wheelParts.push(utf8ToString(heap, pointer));
-                    };
-                    return WebAssembly.instantiate(bytes, { env: { memory, hello } });
+                .then(bytes => WebAssembly.compile(bytes))
+                .then(wasmModule => {
+                    const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
+                    return WebAssembly.instantiate(wasmModule, { env: { memory, rand: Math.random } });
+                })
+                .then(instance => {
+                    const offset = instance.exports.name();
+                    const heap = new Uint8Array(instance.exports.memory.buffer);
+                    wheelParts.push(utf8ToString(heap, offset));
                 }));
 
             Promise.all(wasmPromises)
-                .then(wasmPairs => {
+                .then(() => {
                     wheel.setWords(wheelParts);
                     wheel.drawWheel();
                 });
