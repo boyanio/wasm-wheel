@@ -1,0 +1,20 @@
+{
+    "name": "wasm-wheel",
+    "title": "The Wheel of WebAssembly",
+    "author": {
+        "name": "Boyan Mihaylov",
+        "url": "https://boyan.io"
+    },
+    "license": "MIT License",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/boyanio/wasm-wheel.git"
+    },
+    "version": "1.0.0",
+    "devDependencies": {
+        "connect": "^3.6.5",
+        "gulp": "^3.9.1",
+        "serve-static": "^1.13.1",
+        "webassembly": "^0.11.0"
+    }
+}
