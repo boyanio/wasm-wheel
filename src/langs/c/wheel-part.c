@@ -1,7 +1,9 @@
-char * name(void) {
+#include <webassembly.h>
+
+export char * name(void) {
   return "C / C++";
 }
 
-int feelingLucky(void) {
+export int feelingLucky(void) {
   return rand() % 100 + 1;
 }

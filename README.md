@@ -5,8 +5,13 @@ The Wheel of WASM is a project aiming to show the diversity of languages that co
 ## Supported languages
 
 - C / C++
+- C#
 
-## Building
+## Requirements
+
+- Node 8.9.1 (could work with a lower version, too, but this is what I have installed)
+
+## Build
 
 ```
 $> git clone https://github.com/boyanio/wasm-wheel.git
@@ -20,7 +25,11 @@ Each wheel part represents a language that can be compiled to WebAssembly. My in
 
 #### C / C++
 
-The easiest (cleanest) way to compile it is by [https://wasdk.github.io/WasmFiddle/?aixkf](WasmFiddle).
+Currently done by [https://www.npmjs.com/package/webassembly](webassembly).
+
+#### C#
+
+This uses [https://github.com/SteveSanderson/Blazor/tree/150aeeb0965bd4b7a24412d239d836016c6b4238](DotNetAnywhere), where the compiled version is included in the repository. You need a C# compiler, though, in order to compile `wheel-part.cs`. I assume you have installed .NET Framework and you have a compiler at `C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe`.
 
 ## Running
 
