@@ -23,6 +23,6 @@
         script.onload = resolve;
         script.onerror = reject;
         script.async = true;
-        script.src = 'wasm/dna.js';
+        script.src = 'wasm/wheel-part-csharp.js';
     });
 })();

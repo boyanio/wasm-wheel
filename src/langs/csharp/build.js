@@ -4,7 +4,7 @@ const exec = require('child_process').exec;
 exports.task = (done) => {
     const buildDir = `${__dirname}/../../../build/wasm`;
     fs.createReadStream(`${__dirname}/wasm-loader.js`).pipe(fs.createWriteStream(`${buildDir}/wheel-part-csharp.wasm-loader.js`));
-    fs.createReadStream(`${__dirname}/dna.js`).pipe(fs.createWriteStream(`${buildDir}/dna.js`));
+    fs.createReadStream(`${__dirname}/dna.js`).pipe(fs.createWriteStream(`${buildDir}/wheel-part-csharp.js`));
     fs.createReadStream(`${__dirname}/dna.wasm`).pipe(fs.createWriteStream(`${buildDir}/wheel-part-csharp.wasm`));
     fs.createReadStream(`${__dirname}/corlib.dll`).pipe(fs.createWriteStream(`${buildDir}/corlib.dll`));
 
