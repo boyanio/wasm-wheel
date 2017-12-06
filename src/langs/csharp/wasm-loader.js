@@ -12,7 +12,12 @@
             FS.createPreloadedFile('/', 'wheel-part-csharp.dll', '/wasm/wheel-part-csharp.dll', true);
         },
         postRun: () => {
-            const event = new CustomEvent('wheelPartLoaded', { detail: 'C#' });
+            const event = new CustomEvent('wheelPartLoaded', {
+                detail: {
+                    name: 'C#',
+                    feelingLucky: () => invokeCSFunc('wheel-part-csharp', 'WheelOfWasm', 'Program', 'feelingLucky', null, 'number')
+                }
+            });
             document.dispatchEvent(event);
         }
     };

@@ -22,22 +22,22 @@
             textSize: .12, // of radius
             edgeDist: .14
         };
-        // of radius
-        let options = {
-            width: 360,
-            height: 360,
-            type: 'svg'
-        };
+
         const friction = .95;
         const maxSpeed = .5;
         let isGroupActive = false;
         let curPosArr = [];
         let dirScalar = 1;
-        let lastCurTime = undefined;
-        let speed = undefined;
-        let words = undefined;
-        let two = undefined;
-        let group = undefined;
+        let lastCurTime;
+        let speed;
+        let wheelParts = [];
+        let two;
+        let group;
+        let options = {
+            width: 360,
+            height: 360,
+            type: 'svg'
+        };
 
         const init = opts => {
             options = Object.assign({}, options, opts);
@@ -54,8 +54,8 @@
             two.renderer.domElement.setAttribute('style', '\n        -moz-user-select:none;\n        -ms-user-select:none;\n        -webkit-user-select:none;\n        user-select:none;\n        -webkit-tap-highlight-color: rgba(0,0,0,0);\n      ');
         };
 
-        const setWords = wordsArr => {
-            words = wordsArr;
+        const setWheelParts = wheelPartsArr => {
+            wheelParts = wheelPartsArr;
         };
 
         const setViewBox = (width, height) => {
@@ -108,7 +108,7 @@
             const width = _two3.width;
             const height = _two3.height;
             const numColors = COLORS.length;
-            const rotationUnit = 2 * PI / words.length;
+            const rotationUnit = 2 * PI / wheelParts.length;
             const yOffset = width * ratios.tickerRadius * 2;
             const radius = (width - yOffset) / 2;
             const center = {
@@ -117,7 +117,7 @@
             };
             group = two.makeGroup();
 
-            words.map((word, i, arr) => {
+            wheelParts.map((wheelPart, i, arr) => {
                 const angle = rotationUnit * i - (PI + rotationUnit) / 2;
                 const arc = two.makeArcSegment(center.x, center.y, 0, radius, 0, 2 * PI / arr.length);
                 arc.rotation = angle;
@@ -129,7 +129,7 @@
                     y: center.y + (radius - radius * ratios.edgeDist) * Math.sin(angle + rotationUnit / 2)
                 };
 
-                const text = two.makeText(word, textVertex.x, textVertex.y);
+                const text = two.makeText(wheelPart.name, textVertex.x, textVertex.y);
                 text.rotation = rotationUnit * i - PI / 2;
                 text.alignment = 'right';
                 text.fill = '#fff';
@@ -177,7 +177,6 @@
                 const deltaRotation = angleAtCursorNow - angleAtCursorDown;
                 dirScalar = deltaRotation > 0 ? 1 : -1;
                 group.rotation = (group.rotation + deltaRotation) % TAU;
-                handleRotationChange(group.rotation);
                 two.update();
             }
         };
@@ -208,16 +207,9 @@
             group.rotation = (group.rotation + speed * dirScalar) % TAU;
             speed = speed * friction;
 
-            handleRotationChange(group.rotation);
-
             if (speed < 0.005) {
                 two.unbind('update', animateWheel);
-            }
-        };
-
-        const handleRotationChange = angle => {
-            if (options.onWheelTick && typeof options.onWheelTick === 'function') {
-                options.onWheelTick(angle);
+                two.trigger('completed');
             }
         };
 
@@ -232,11 +224,11 @@
             two.trigger('resize');
         };
 
-        const getCurrentWord = () => {
-            const numWords = words.length;
+        const getCurrentWheelPart = () => {
+            const numWords = wheelParts.length;
             const segmentAngle = TAU / numWords;
             const currAngle = (TAU - group.rotation + segmentAngle / 2) % TAU;
-            return words.find((_, i) => segmentAngle * (i + 1) > currAngle);
+            return wheelParts.find((_, i) => segmentAngle * (i + 1) > currAngle);
         };
 
         const eventMap = {
@@ -270,14 +262,19 @@
             return true;
         };
 
+        const onSpinned = callback => {
+            two.bind('completed', callback);
+        };
+
         return {
             destroy: destroy,
             drawWheel: drawWheel,
-            getCurrentWord: getCurrentWord,
+            getCurrentWheelPart: getCurrentWheelPart,
             init: init,
-            setWords: setWords,
+            setWheelParts: setWheelParts,
             spin: spin,
-            updateDims: updateDims
+            updateDims: updateDims,
+            onSpinned: onSpinned
         };
     };
 

@@ -5,7 +5,7 @@
     document.addEventListener('wheelPartLoaded', e => {
         wheelParts.push(e.detail);
 
-        wheel.setWords(wheelParts);
+        wheel.setWheelParts(wheelParts);
         wheel.drawWheel();
     }, false);
 
@@ -30,7 +30,12 @@
             const offset = exports.name();
             const heap = new Uint8Array(memory.buffer);
             const wheelPart = utf8ToString(heap, offset);
-            const event = new CustomEvent('wheelPartLoaded', { detail: wheelPart });
+            const event = new CustomEvent('wheelPartLoaded', {
+                detail: {
+                    name: wheelPart,
+                    feelingLucky: () => exports.feelingLucky()
+                }
+            });
             document.dispatchEvent(event);
         });
 
@@ -52,4 +57,9 @@
                 }
             });
         });
+
+    wheel.onSpinned(() => {
+        const currentWheelPart = wheel.getCurrentWheelPart();
+        alert('You got ' + currentWheelPart.feelingLucky() + ' from ' + currentWheelPart.name);
+    });
 }());
