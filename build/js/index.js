@@ -23,7 +23,7 @@
         .then(bytes => WebAssembly.compile(bytes))
         .then(wasmModule => {
             const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
-            return WebAssembly.instantiate(wasmModule, { env: { memory, rand: Math.random } })
+            return WebAssembly.instantiate(wasmModule, { env: { memory } })
                 .then(instance => ({ exports: instance.exports, memory }));
         })
         .then(({ exports, memory }) => {

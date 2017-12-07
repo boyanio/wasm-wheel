@@ -12,6 +12,7 @@
     },
     "version": "1.0.0",
     "devDependencies": {
+        "assemblyscript": "^0.3.0",
         "connect": "^3.6.5",
         "gulp": "^3.9.1",
         "serve-static": "^1.13.1",
