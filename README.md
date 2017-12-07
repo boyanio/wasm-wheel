@@ -6,6 +6,7 @@ The Wheel of WASM is a project aiming to show the diversity of languages that co
 
 - C / C++
 - C#
+- TypeScript
 
 ## Requirements
 
@@ -25,11 +26,15 @@ Each wheel part represents a language that can be compiled to WebAssembly. My in
 
 #### C / C++
 
-Currently done by [https://www.npmjs.com/package/webassembly](webassembly).
+Compiled by [https://www.npmjs.com/package/webassembly](webassembly).
 
 #### C#
 
 This uses [https://github.com/SteveSanderson/Blazor/tree/150aeeb0965bd4b7a24412d239d836016c6b4238](DotNetAnywhere), where the compiled version is included in the repository. You need a C# compiler, though, in order to compile `wheel-part.cs`. I assume you have installed .NET Framework and you have a compiler at `C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe`.
+
+#### TypeScript
+
+Compiled by  [https://www.npmjs.com/package/assemblyscript](assemblyscript).
 
 ## Running
 
