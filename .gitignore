@@ -1,2 +1,3 @@
 node_modules
 build/wasm/*
+/build/wheel-parts.json
