@@ -8,8 +8,8 @@
         wasmBinaryFile: 'wasm/wheel-part-csharp.wasm',
         arguments: ['wheel-part-csharp.dll'],
         preRun: () => {
-            FS.createPreloadedFile('/', 'corlib.dll', '/wasm/corlib.dll', true);
-            FS.createPreloadedFile('/', 'wheel-part-csharp.dll', '/wasm/wheel-part-csharp.dll', true);
+            FS.createPreloadedFile('/', 'corlib.dll', 'wasm/corlib.dll', true);
+            FS.createPreloadedFile('/', 'wheel-part-csharp.dll', 'wasm/wheel-part-csharp.dll', true);
         },
         postRun: () => {
             const event = new CustomEvent('wheelPartLoaded', {
