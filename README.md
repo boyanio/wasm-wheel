@@ -1,6 +1,11 @@
-# The Wheel of WASM
+# The Wheel of WebAssembly
 
-The Wheel of WASM is a project aiming to show the diversity of languages that compile to WebAssembly.
+The _Wheel of WebAssembly_ is a project aiming to show the diversity of languages that compile to WebAssembly. My initial idea was to define two functions in each language:
+
+- `name()` - returning the name of the language. This is used to render each part of the wheel.
+- `feelingLucky()` - returning a random integer between 1 and 100. This is used when the wheel is turned.
+
+In theory, when compiling each language, the output wasm file should be almost identical. In practice, this is not the case. As many of the compilers are still very experimental, these two functions cannot be definen in all the languages. Some have issues with generating a random number, so I import JavaSript's `Math.random()` to help them. Others cannot handle strings properly. WebAssembly defines only numeric types and strings are suppsed to be put in the linear memory and accessed via a pointer from JavaScript.
 
 ## Supported languages
 
@@ -12,14 +17,9 @@ The Wheel of WASM is a project aiming to show the diversity of languages that co
 ## Requirements
 
 - Node 8.9.1 (could work with a lower version, too, but this is what I have installed)
+- emscripten (SDK 1.37.22)
 
-## Build
-
-```
-$> git clone https://github.com/boyanio/wasm-wheel.git
-$> cd wasm-wheel
-$> npm install
-```
+Furthermore, each language has further requirements.
 
 ### Compiling wheel parts
 
@@ -42,12 +42,20 @@ Compiled by  [https://www.npmjs.com/package/assemblyscript](assemblyscript).
 You have to install the Rust toolchain by following these (https://www.rust-lang.org/en-US/install.html)[instructions]. Afterwards you need to install the nightly toolchain in order to compile to WebAssembly using the experimental LLVM compiler.
 
 ```
-rustup update nightly
-rustup default nightly
-rustup target add wasm32-unknown-unknown
+$> rustup update nightly
+$> rustup default nightly
+$> rustup target add wasm32-unknown-unknown
 ```
 
-## Running
+## Build
+
+```
+$> git clone https://github.com/boyanio/wasm-wheel.git
+$> cd wasm-wheel
+$> npm install
+```
+
+## Run
 
 The following command will compile all sources to WASM and set up a HTTP server on port 8080. You can then access the site on `http://localhost:8080`.
 
