@@ -7,6 +7,7 @@ The Wheel of WASM is a project aiming to show the diversity of languages that co
 - C / C++
 - C#
 - TypeScript
+- Rust
 
 ## Requirements
 
@@ -35,6 +36,16 @@ This uses [https://github.com/SteveSanderson/Blazor/tree/150aeeb0965bd4b7a24412d
 #### TypeScript
 
 Compiled by  [https://www.npmjs.com/package/assemblyscript](assemblyscript).
+
+#### Rust
+
+You have to install the Rust toolchain by following these (https://www.rust-lang.org/en-US/install.html)[instructions]. Afterwards you need to install the nightly toolchain in order to compile to WebAssembly using the experimental LLVM compiler.
+
+```
+rustup update nightly
+rustup default nightly
+rustup target add wasm32-unknown-unknown
+```
 
 ## Running
 

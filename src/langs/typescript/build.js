@@ -19,7 +19,6 @@ exports.task = (done) => {
 
     const buildDir = `${__dirname}/../../../build/wasm`;
     fs.writeFile(`${buildDir}/wheel-part-typescript.wasm`, new Buffer(wasmModule.emitBinary()));
-    fs.createReadStream(`${__dirname}/wasm-loader.js`).pipe(fs.createWriteStream(`${buildDir}/wheel-part-typescript.wasm-loader.js`));
     wasmModule.dispose();
 
     done();

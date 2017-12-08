@@ -1,8 +1,11 @@
 /// <reference path="../../../node_modules/assemblyscript/assembly.d.ts" />
 
-declare function Math$random(): number;
-declare function Math$floor(num: number): number;
+declare function random(): number;
+
+// If I create a name() method returning a string,
+// I cannot fetch it from the memory as it adds some spaces
+// between the letters
 
 export function feelingLucky(): number {
-  return Math$floor(Math$random() * 100) + 1;
+  return floor(random() * 100) + 1;
 }

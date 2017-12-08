@@ -17,19 +17,32 @@
         return s;
     };
 
-    const defaultWasmLoader = wasmFile =>
+    const defaultWasmLoader = (wasmFile, name) =>
         fetch(`wasm/${wasmFile}`)
         .then(response => response.arrayBuffer())
         .then(bytes => WebAssembly.compile(bytes))
         .then(wasmModule => {
+            // For the MVP, there is only one memory for all modules, however
+            // in the future, each module would probably get its own memory    
             const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
-            return WebAssembly.instantiate(wasmModule, { env: { memory } })
+            return WebAssembly.instantiate(wasmModule, {
+                    env: {
+                        memory,
+                        // Some languages do not support random number generation easily,
+                        // so we allow them to reuse JavaScript's API
+                        random: () => Math.random()
+                    }
+                })
                 .then(instance => ({ exports: instance.exports, memory }));
         })
         .then(({ exports, memory }) => {
-            const offset = exports.name();
-            const heap = new Uint8Array(memory.buffer);
-            const wheelPart = utf8ToString(heap, offset);
+            let wheelPart = name;
+            if (!wheelPart) {
+                const offset = exports.name();
+                const heap = new Uint8Array(memory.buffer);
+                wheelPart = utf8ToString(heap, offset);
+            }
+
             const event = new CustomEvent('wheelPartLoaded', {
                 detail: {
                     name: wheelPart,
@@ -50,16 +63,16 @@
                         script.onload = resolve;
                         script.onerror = reject;
                         script.async = true;
-                        script.src = `wasm/${wasm.loader}`;
+                        script.src = `wasm/${wasm.file}-loader.js`;
                     });
                 } else {
-                    defaultWasmLoader(wasm.file);
+                    defaultWasmLoader(wasm.file, wasm.name);
                 }
             });
         });
 
     wheel.onSpinned(() => {
         const currentWheelPart = wheel.getCurrentWheelPart();
-        alert('You got ' + currentWheelPart.feelingLucky() + ' from ' + currentWheelPart.name);
+        alert(`You got ${currentWheelPart.feelingLucky()} from ${currentWheelPart.name}`);
     });
 }());
