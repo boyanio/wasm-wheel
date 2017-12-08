@@ -8,19 +8,21 @@ const buildDir = `${__dirname}/build`;
 const buildWasmDir = `${buildDir}/wasm`;
 const langDir = `${__dirname}/src/langs`;
 
-const buildTasks = () => fs.readdirSync(langDir)
-    .filter(lang => fs.existsSync(`${langDir}/${lang}/build.js`))
-    .reduce((tasks, lang) => {
-        const task = `build-wasm-${lang}`;
-        const taskFn = require(`./src/langs/${lang}/build`).task;
-        gulp.task(task, (done) => {
-            console.log(`Building ${lang} wheel part ...`);
-            taskFn(done);
-        });
-        return [...tasks, task];
-    }, []);
+const langs = fs.readdirSync(langDir)
+    .filter(lang => fs.existsSync(`${langDir}/${lang}/build.js`));
+const wasmTasks = [];
 
-gulp.task('build-wasm', buildTasks());
+for (const lang of langs) {
+    const task = `build-wasm-${lang}`;
+    const taskFn = require(`./src/langs/${lang}/build`).task;
+    gulp.task(task, (done) => {
+        console.log(`Building ${lang} wheel part ...`);
+        taskFn(done);
+    });
+    wasmTasks.push(task);
+}
+
+gulp.task('build-wasm', wasmTasks);
 
 gulp.task('build-metadata', ['build-wasm'], () => {
     const wasmFiles = fs.readdirSync(langDir)
