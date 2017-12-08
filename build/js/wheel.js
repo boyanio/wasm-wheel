@@ -286,12 +286,6 @@
         height: Math.min(window.innerWidth, window.innerHeight)
     });
 
-    const handleSpin = () => {
-        wheel.spin(Math.random());
-    };
-    const spinButton = document.querySelector('.js-spin');
-    spinButton.addEventListener('click', handleSpin);
-
     window.addEventListener('resize', () => {
         wheel.updateDims({
             width: Math.min(window.innerWidth, window.innerHeight),
