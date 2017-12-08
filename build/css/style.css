@@ -5,8 +5,7 @@ body {
 }
 
 body {
-    background-image: linear-gradient(to bottom, #7cceb1, #7948dc);
-    background-repeat: no-repeat;
+    background-color: #669999;
     color: #fff;
     font-family: 'Open Sans', sans-serif!important;
 }
@@ -15,18 +14,4 @@ body {
     display: block;
     max-width: 100%;
     margin: 0 auto;
-}
-
-.row {
-    max-width: 520px;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'Open Sans', sans-serif!important;
-    font-weight: normal;
 }
