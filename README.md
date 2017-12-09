@@ -13,6 +13,7 @@ In theory, when compiling each language, the output wasm file should be almost i
 - C#
 - TypeScript
 - Rust
+- Java
 
 ## Requirements
 
@@ -46,6 +47,10 @@ $> rustup update nightly
 $> rustup default nightly
 $> rustup target add wasm32-unknown-unknown
 ```
+
+#### Java
+
+In order to compile Java into WebAssembly, I use (http://teavm.org/)[TeaVM]. The only thing you need is Maven - it will install its depedencies afterwards. You obviously need Java SDK as well.
 
 ## Build
 
