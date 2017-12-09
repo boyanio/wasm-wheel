@@ -5,7 +5,8 @@ body {
 }
 
 body {
-    background-color: #669999;
+    background-image: linear-gradient(to bottom, #669999, #669966);
+    background-repeat: no-repeat;
     color: #fff;
     font-family: 'Open Sans', sans-serif!important;
 }
