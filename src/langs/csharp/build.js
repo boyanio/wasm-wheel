@@ -7,11 +7,8 @@ exports.task = (done) => {
     const compiler = 'C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc';
 
     exec(`${compiler} /nologo /target:library /out:"${buildDir}\\wheel-part-csharp.dll" "${__dirname}\\wheel-part.cs"`)
-        .then(({ error, stdout }) => {
+        .then(({ stdout }) => {
             console.log(stdout);
-
-            if (error)
-                throw error;
 
             fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-csharp.wasm-loader.js`);
             fs.copyFileSync(`${__dirname}/dna.js`, `${buildDir}/wheel-part-csharp.js`);
@@ -19,5 +16,8 @@ exports.task = (done) => {
             fs.copyFileSync(`${__dirname}/corlib.dll`, `${buildDir}/corlib.dll`);
 
             done();
+        }, ({ stdout, cmd }) => {
+            console.log(stdout);
+            throw Error(`Error when running: ${cmd}`);
         });
 };
