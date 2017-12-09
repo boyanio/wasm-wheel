@@ -4,9 +4,11 @@ extern {
   fn random() -> f64;
 }
 
-// I get 'RuntimeError: memory access out of bounds'
-// when trying to define a name() method, which
-// returns a String, so that's why I am putting the name in the metafile
+#[no_mangle]
+pub fn name() -> *const u8 {
+	let n = b"Rust\0";
+	return n as *const u8;
+}
 
 #[allow(non_snake_case)]
 #[no_mangle]

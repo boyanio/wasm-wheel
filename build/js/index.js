@@ -39,7 +39,7 @@
             let wheelPart = name;
             if (!wheelPart) {
                 const offset = exports.name();
-                const heap = new Uint8Array(memory.buffer);
+                const heap = new Uint8Array((exports.memory || memory).buffer);
                 wheelPart = utf8ToString(heap, offset);
             }
 
