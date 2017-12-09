@@ -7,7 +7,6 @@ exports.task = (done) => {
             if (err)
                 throw err;
 
-            console.log(`WASM file saved to: ${filename}`);
             done();
         });
 };
