@@ -18,7 +18,7 @@ exports.task = (done) => {
         throw Error('Validation failed');
 
     const buildDir = `${__dirname}/../../../build/wasm`;
-    fs.writeFile(`${buildDir}/wheel-part-typescript.wasm`, new Buffer(wasmModule.emitBinary()));
+    fs.writeFileSync(`${buildDir}/wheel-part-typescript.wasm`, new Buffer(wasmModule.emitBinary()));
     wasmModule.dispose();
 
     done();
