@@ -28,19 +28,19 @@ Each wheel part represents a language that can be compiled to WebAssembly. My in
 
 #### C / C++
 
-Compiled by [https://www.npmjs.com/package/webassembly](webassembly).
+Compiled by [webassembly](https://www.npmjs.com/package/webassembly).
 
 #### C#
 
-This uses [https://github.com/SteveSanderson/Blazor/tree/150aeeb0965bd4b7a24412d239d836016c6b4238](DotNetAnywhere), where the compiled version is included in the repository. You need a C# compiler, though, in order to compile `wheel-part.cs`. I assume you have installed .NET Framework and you have a compiler at `C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe`.
+This uses [DotNetAnywhere](https://github.com/SteveSanderson/Blazor/tree/150aeeb0965bd4b7a24412d239d836016c6b4238), where the compiled version is included in the repository. You need a C# compiler, though, in order to compile `wheel-part.cs`. I assume you have installed .NET Framework and you have a compiler at `C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe`.
 
 #### TypeScript
 
-Compiled by  [https://www.npmjs.com/package/assemblyscript](assemblyscript).
+Compiled by [assemblyscript](https://www.npmjs.com/package/assemblyscript).
 
 #### Rust
 
-You have to install the Rust toolchain by following these (https://www.rust-lang.org/en-US/install.html)[instructions]. Afterwards you need to install the nightly toolchain in order to compile to WebAssembly using the experimental LLVM compiler.
+You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to install the nightly toolchain in order to compile to WebAssembly using the experimental LLVM compiler.
 
 ```
 $> rustup update nightly
@@ -50,7 +50,7 @@ $> rustup target add wasm32-unknown-unknown
 
 #### Java
 
-In order to compile Java into WebAssembly, I use (http://teavm.org/)[TeaVM]. The only thing you need is Maven - it will install its depedencies afterwards. You obviously need Java SDK as well.
+In order to compile Java into WebAssembly, I use [TeaVM](http://teavm.org/). The only thing you need is Maven - it will install its depedencies afterwards. You obviously need Java SDK as well.
 
 ## Build
 
