@@ -4,9 +4,28 @@ const exec = util.promisify(require('child_process').exec);
 
 exports.task = (done) => {
     const buildDir = `${__dirname}/../../../build/wasm`;
-    const compiler = 'C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc';
 
-    exec(`${compiler} /nologo /target:library /out:"${buildDir}\\wheel-part-csharp.dll" "${__dirname}\\wheel-part.cs"`)
+    const compilation = async() => {
+        const monoCompiler = 'mcs';
+        const vsCompiler = 'C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc';
+
+        let useMono = false;
+        try {
+            await exec(`${monoCompiler} --about`);
+            useMono = true;
+            console.log('Mono is present on this machine, using mcs');
+        } catch (e) {
+            console.log('Mono seems to be missing on this machine. Using csc instead');
+        }
+
+        const cmd = useMono ?
+            `${monoCompiler} -target:library -out:"${buildDir}\\wheel-part-csharp.dll" "${__dirname}\\wheel-part.cs"` :
+            `${vsCompiler} /nologo /target:library /out:"${buildDir}\\wheel-part-csharp.dll" "${__dirname}\\wheel-part.cs"`;
+
+        return await exec(cmd);
+    };
+
+    compilation()
         .then(({ stdout }) => {
             console.log(stdout);
 

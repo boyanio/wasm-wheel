@@ -32,7 +32,7 @@ Compiled by [webassembly](https://www.npmjs.com/package/webassembly).
 
 #### C#
 
-This uses [DotNetAnywhere](https://github.com/SteveSanderson/Blazor/tree/150aeeb0965bd4b7a24412d239d836016c6b4238), where the compiled version is included in the repository. You need a C# compiler, though, in order to compile `wheel-part.cs`. I assume you have installed .NET Framework and you have a compiler at `C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe`.
+You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio 2017+ installed on your machine to compile the source. Although, Mono has an [example](http://www.mono-project.com/news/2017/08/09/hello-webassembly/) of compiling C# directly to WebAssembly, the set-up is a bit more complicated. That is why I use Steve Sanderson's example of [DotNetAnywhere](https://github.com/SteveSanderson/Blazor/tree/150aeeb0965bd4b7a24412d239d836016c6b4238) to load a .NET DLL into the browser.
 
 #### TypeScript
 
