@@ -6,7 +6,7 @@ import org.teavm.interop.Import;
 public class WheelPart {
 
     // When returing a String from a name() method,
-    // I cannot really read it from the leaner memory,
+    // I cannot really read it from the linear memory,
     // as it gets some spaces inbetween.
 
     @Export(name = "feelingLucky")
