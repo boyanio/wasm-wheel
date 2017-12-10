@@ -21,5 +21,6 @@ exports.task = (done) => {
     fs.writeFileSync(`${buildDir}/wheel-part-typescript.wasm`, new Buffer(wasmModule.emitBinary()));
     wasmModule.dispose();
 
+    fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-typescript.wasm-loader.js`);
     done();
 };

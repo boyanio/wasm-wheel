@@ -17,7 +17,9 @@
         return s;
     };
 
-    const defaultWasmLoader = (wasmFile, name) =>
+    const defaultReadStringFromMemory = (exports, heap) => utf8ToString(heap, exports.name());
+
+    const defaultWasmLoader = (wasmFile, readStringFromMemory) =>
         fetch(`wasm/${wasmFile}`)
         .then(response => response.arrayBuffer())
         .then(bytes => WebAssembly.compile(bytes))
@@ -36,12 +38,8 @@
                 .then(instance => ({ exports: instance.exports, memory }));
         })
         .then(({ exports, memory }) => {
-            let wheelPart = name;
-            if (!wheelPart) {
-                const offset = exports.name();
-                const heap = new Uint8Array((exports.memory || memory).buffer);
-                wheelPart = utf8ToString(heap, offset);
-            }
+            const heap = new Uint8Array((exports.memory || memory).buffer);
+            const wheelPart = readStringFromMemory(exports, heap);
 
             const event = new CustomEvent('wheelPartLoaded', {
                 detail: {
@@ -51,6 +49,7 @@
             });
             document.dispatchEvent(event);
         });
+    wheel.defaultWasmLoader = defaultWasmLoader;
 
     fetch(`wheel-parts.json?v=${new Date().getTime()}`)
         .then(response => response.json())
@@ -66,7 +65,13 @@
                         script.src = `wasm/${wasm.file}-loader.js`;
                     });
                 } else {
-                    defaultWasmLoader(wasm.file, wasm.name);
+                    const readStringFromMemory = (exports, heap) => {
+                        if (wasm.name) {
+                            return wasm.name;
+                        }
+                        return defaultReadStringFromMemory(exports, heap);
+                    };
+                    defaultWasmLoader(wasm.file, readStringFromMemory);
                 }
             });
         });
