@@ -21,3 +21,17 @@ body {
     background-color: transparent;
     border: none;
 }
+
+.btn-primary:focus, .btn-primary.active {
+    outline: none;
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+.btn-default:focus, .btn-default.active {
+    outline: none;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
