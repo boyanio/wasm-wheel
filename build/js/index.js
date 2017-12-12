@@ -1,4 +1,4 @@
-(function() {
+(function () {
     "use strict";
 
     const wheelParts = [];
@@ -21,13 +21,13 @@
 
     const defaultWasmLoader = (wasmFile, readStringFromMemory) =>
         fetch(`wasm/${wasmFile}`)
-        .then(response => response.arrayBuffer())
-        .then(bytes => WebAssembly.compile(bytes))
-        .then(wasmModule => {
-            // For the MVP, there is only one memory for all modules, however
-            // in the future, each module would probably get its own memory    
-            const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
-            return WebAssembly.instantiate(wasmModule, {
+            .then(response => response.arrayBuffer())
+            .then(bytes => WebAssembly.compile(bytes))
+            .then(wasmModule => {
+                // For the MVP, there is only one memory for all modules, however
+                // in the future, each module would probably get its own memory    
+                const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
+                return WebAssembly.instantiate(wasmModule, {
                     env: {
                         memory,
                         // Some languages do not support random number generation easily,
@@ -35,20 +35,20 @@
                         random: () => Math.random()
                     }
                 })
-                .then(instance => ({ exports: instance.exports, memory }));
-        })
-        .then(({ exports, memory }) => {
-            const heap = new Uint8Array((exports.memory || memory).buffer);
-            const wheelPart = readStringFromMemory(exports, heap);
+                    .then(instance => ({ exports: instance.exports, memory }));
+            })
+            .then(({ exports, memory }) => {
+                const heap = new Uint8Array((exports.memory || memory).buffer);
+                const wheelPart = readStringFromMemory(exports, heap);
 
-            const event = new CustomEvent('wheelPartLoaded', {
-                detail: {
-                    name: wheelPart,
-                    feelingLucky: () => exports.feelingLucky()
-                }
+                const event = new CustomEvent('wheelPartLoaded', {
+                    detail: {
+                        name: wheelPart,
+                        feelingLucky: () => exports.feelingLucky()
+                    }
+                });
+                document.dispatchEvent(event);
             });
-            document.dispatchEvent(event);
-        });
     wheel.defaultWasmLoader = defaultWasmLoader;
 
     fetch(`wheel-parts.json?v=${new Date().getTime()}`)
@@ -78,6 +78,11 @@
 
     wheel.onSpinned(() => {
         const currentWheelPart = wheel.getCurrentWheelPart();
-        alert(`You got ${currentWheelPart.feelingLucky()} from ${currentWheelPart.name}`);
+        wheel.setCenterText(currentWheelPart.feelingLucky());
+        wheel.drawCenterCircleText();
     });
+
+    document.getElementById('spinBtn').addEventListener('click', () => {
+        wheel.spin(Math.random());
+    }, false);
 }());

@@ -1,4 +1,4 @@
-(function() {
+(function () {
     // Original source: https://codepen.io/larrybotha/pen/yMmQyG
     "use strict";
 
@@ -31,6 +31,8 @@
         let lastCurTime;
         let speed;
         let wheelParts = [];
+        let centerText = '';
+        let centerCircleText;
         let two;
         let group;
         let options = {
@@ -58,6 +60,10 @@
             wheelParts = wheelPartsArr;
         };
 
+        const setCenterText = text => {
+            centerText = text;
+        };
+
         const setViewBox = (width, height) => {
             two.renderer.domElement.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
         };
@@ -72,6 +78,30 @@
             const circleCenter = tickerCircle.translation;
 
             drawTickerArrow(outerRadius, degToRad(30), circleCenter);
+        };
+
+        const drawCenterCircle = () => {
+            const _two = two;
+            const width = _two.width;
+            const yOffset = width * ratios.tickerRadius * 2;
+            const radius = (width - yOffset) / 2;
+            const center = {
+                x: width / 2,
+                y: radius + yOffset
+            };
+
+            const arc = _two.makeArcSegment(center.x, center.y, 0, radius * .16, 0, 2 * PI);
+            arc.noStroke();
+
+            centerCircleText = _two.makeText(centerText, center.x, center.y + 10);
+            centerCircleText.fill = '#000';
+            centerCircleText.size = radius * ratios.textSize;
+        };
+
+        const drawCenterCircleText = () => {
+            if (centerCircleText) {
+                centerCircleText.value = centerText;
+            }
         };
 
         const drawTickerCircle = outerRadius => {
@@ -141,6 +171,7 @@
             group.translation.set(center.x, center.y);
             group.center();
             drawTicker();
+            drawCenterCircle();
 
             two.update();
         };
@@ -149,6 +180,7 @@
             setViewBox(two.width, two.height);
             drawWheel();
             drawTicker();
+            drawCenterCircle();
             two.update();
         };
 
@@ -272,6 +304,8 @@
             getCurrentWheelPart: getCurrentWheelPart,
             init: init,
             setWheelParts: setWheelParts,
+            setCenterText: setCenterText,
+            drawCenterCircleText: drawCenterCircleText,
             spin: spin,
             updateDims: updateDims,
             onSpinned: onSpinned

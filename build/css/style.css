@@ -8,11 +8,16 @@ body {
     background-image: linear-gradient(to bottom, #669999, #669966);
     background-repeat: no-repeat;
     color: #fff;
-    font-family: 'Open Sans', sans-serif!important;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .mount svg {
     display: block;
     max-width: 100%;
     margin: 0 auto;
+}
+
+.jumbotron {
+    background-color: transparent;
+    border: none;
 }
