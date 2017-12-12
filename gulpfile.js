@@ -22,7 +22,13 @@ for (const lang of langs) {
     wasmTasks.push(task);
 }
 
-gulp.task('build-wasm', wasmTasks);
+gulp.task('build-wasm', ['build-wasm-folder', ...wasmTasks]);
+
+gulp.task('build-wasm-folder', () => {
+    if (!fs.existsSync(buildWasmDir)) {
+        fs.mkdirSync(buildWasmDir);
+    }
+});
 
 gulp.task('build-metadata', () => {
     const wasmFiles = fs.readdirSync(langDir)
