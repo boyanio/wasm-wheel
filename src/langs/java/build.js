@@ -1,13 +1,17 @@
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const { exec } = require('child_process');
 
 exports.task = (done) => {
-    exec(`mvn clean install`, { cwd: `${__dirname}` })
-        .then(({ stdout }) => {
-            console.log(stdout);
-            done();
-        }, ({ stdout, cmd }) => {
-            console.log(stdout);
-            throw Error(`Error when running: ${cmd}`);
-        });
+    const ls = exec('mvn clean install', { cwd: __dirname });
+    ls.stdout.on('data', (data) => {
+        console.log(data);
+    });
+    ls.stderr.on('data', (data) => {
+        console.log(data);
+    });
+    ls.on('exit', (code) => {
+        if (code !== 0)
+            throw Error('Error when building the Java wheel part');
+
+        done();
+    });
 };
