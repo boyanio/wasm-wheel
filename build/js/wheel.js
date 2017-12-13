@@ -90,12 +90,13 @@
                 y: radius + yOffset
             };
 
-            const arc = _two.makeArcSegment(center.x, center.y, 0, radius * .16, 0, 2 * PI);
+            const arc = two.makeArcSegment(center.x, center.y, 0, radius * .16, 0, 2 * PI);
             arc.noStroke();
 
-            centerCircleText = _two.makeText(centerText, center.x, center.y + 10);
+            const textSize = radius * ratios.textSize * .8;
+            centerCircleText = two.makeText(centerText, center.x, center.y + textSize / 3);
             centerCircleText.fill = '#000';
-            centerCircleText.size = radius * ratios.textSize;
+            centerCircleText.size = textSize;
         };
 
         const drawCenterCircleText = () => {
@@ -222,6 +223,7 @@
                 const distance = Math.sqrt(Math.pow(currPos.x - lastPos.x, 2) + Math.pow(currPos.y - lastPos.y, 2));
                 speed = Math.min(distance / time, maxSpeed);
                 two.bind('update', animateWheel);
+                two.trigger('my:spinning');
             }
 
             curPosArr = [];
@@ -248,6 +250,7 @@
         const spin = newSpeed => {
             speed = newSpeed;
             two.bind('update', animateWheel);
+            two.trigger('my:spinning');
         };
 
         const updateDims = ({ height, width }) => {
@@ -294,6 +297,10 @@
             return true;
         };
 
+        const onSpinning = callback => {
+            two.bind('my:spinning', callback);
+        };
+
         const onSpinned = callback => {
             two.bind('completed', callback);
         };
@@ -308,6 +315,7 @@
             drawCenterCircleText: drawCenterCircleText,
             spin: spin,
             updateDims: updateDims,
+            onSpinning: onSpinning,
             onSpinned: onSpinned
         };
     };

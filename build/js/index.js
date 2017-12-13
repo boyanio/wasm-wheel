@@ -76,6 +76,11 @@
             });
         });
 
+    wheel.onSpinning(() => {
+        wheel.setCenterText(null);
+        wheel.drawCenterCircleText();
+    });
+
     wheel.onSpinned(() => {
         const currentWheelPart = wheel.getCurrentWheelPart();
         wheel.setCenterText(currentWheelPart.feelingLucky());
