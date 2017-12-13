@@ -3,7 +3,7 @@
 declare function random(): number;
 
 export function name(): string {
-  return "TypeScript";
+  return "AssemblyScript";
 }
 
 export function feelingLucky(): number {

@@ -21,5 +21,5 @@
     };
 
     const readStringFromMemory = (exports, heap) => utf16leToString(heap, exports.name());
-    wheel.defaultWasmLoader('wheel-part-typescript.wasm?v=2', readStringFromMemory)
+    wheel.defaultWasmLoader('wheel-part-assemblyscript.wasm', readStringFromMemory)
 })();

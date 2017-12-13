@@ -19,7 +19,7 @@
 
         const ratios = {
             tickerRadius: .06, // of width
-            textSize: .12, // of radius
+            textSize: .1, // of radius
             edgeDist: .14
         };
 

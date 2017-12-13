@@ -3,7 +3,7 @@
 The _Wheel of WebAssembly_ is a project aiming to show the diversity of languages that compile to WebAssembly. My initial idea was to define two functions in each language:
 
 - `name()` - returning the name of the language. This is used to render each part of the wheel.
-- `feelingLucky()` - returning a random integer between 1 and 100. This is used when the wheel is turned.
+- `feelingLucky()` - returning a random integer between 1 and 100. This is used when the wheel is spinned.
 
 In theory, when compiling each language, the output wasm file should be almost identical. In practice, this is not the case. As many of the compilers are still very experimental, these two functions cannot be definen in all the languages. Some have issues with generating a random number, so I import JavaSript's `Math.random()` to help them. Others cannot handle strings properly. WebAssembly defines only numeric types and strings are suppsed to be put in the linear memory and accessed via a pointer from JavaScript.
 
@@ -11,7 +11,7 @@ In theory, when compiling each language, the output wasm file should be almost i
 
 - C / C++
 - C#
-- TypeScript
+- AssemblyScript
 - Rust
 - Java
 
@@ -34,9 +34,9 @@ Compiled by [webassembly](https://www.npmjs.com/package/webassembly).
 
 You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio 2017+ installed on your machine to compile the source. Although, Mono has an [example](http://www.mono-project.com/news/2017/08/09/hello-webassembly/) of compiling C# directly to WebAssembly, the set-up is a bit more complicated. That is why I use Steve Sanderson's example of [DotNetAnywhere](https://github.com/SteveSanderson/Blazor/tree/150aeeb0965bd4b7a24412d239d836016c6b4238) to load a .NET DLL into the browser.
 
-#### TypeScript
+#### AssemblyScript
 
-Compiled by [assemblyscript](https://www.npmjs.com/package/assemblyscript).
+[AssemblyScript](https://www.npmjs.com/package/assemblyscript) defines a subset of TypeScript that it compiles to WebAssembly.
 
 #### Rust
 
