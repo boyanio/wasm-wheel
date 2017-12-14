@@ -67,3 +67,7 @@ The following command will compile all sources to WASM and set up a HTTP server 
 ```
 $> gulp
 ```
+
+## Questions & contribution
+
+You can follow me on Twitter with [@boyanio](https://twitter.com/boyanio) and ask me questions you might have. You can also open an issue here on GitHub. Pull requests are welcome, too :-)
