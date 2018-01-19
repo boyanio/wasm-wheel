@@ -57,7 +57,9 @@ gulp.task('clean', () => {
 
 gulp.task('build', ['clean', 'build-metadata', 'build-wasm']);
 
-gulp.task('http', (done) => {
+gulp.task('serve', (done) => {
+    const port = 8080;
+    console.log(`Serving HTTP on http://localhost:${port} ...`);
     connect()
         .use(serveStatic(buildDir))
         .use((req, res, next) => {
@@ -65,7 +67,7 @@ gulp.task('http', (done) => {
             console.log(url);
             next();
         })
-        .listen(8080, done);
+        .listen(port, done);
 });
 
-gulp.task('default', ['build', 'http']);
+gulp.task('default', ['build', 'serve']);
