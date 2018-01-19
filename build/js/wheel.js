@@ -25,14 +25,20 @@
 
         const friction = .95;
         const maxSpeed = .5;
+        const centerCircleEl = {
+            text: null,
+            innerCircle: null
+        };
+        const centerCircleText = {
+            text: '',
+            bgColor: '#fff'
+        };
         let isGroupActive = false;
         let curPosArr = [];
         let dirScalar = 1;
         let lastCurTime;
         let speed;
         let wheelParts = [];
-        let centerText = '';
-        let centerCircleText;
         let two;
         let group;
         let options = {
@@ -60,8 +66,9 @@
             wheelParts = wheelPartsArr;
         };
 
-        const setCenterText = text => {
-            centerText = text;
+        const setCenterText = (text, bgColor) => {
+            centerCircleText.text = text || '';
+            centerCircleText.bgColor = bgColor || '#fff';
         };
 
         const setViewBox = (width, height) => {
@@ -80,6 +87,15 @@
             drawTickerArrow(outerRadius, degToRad(30), circleCenter);
         };
 
+        const drawCenterCircleText = () => {
+            if (centerCircleEl.text) {
+                centerCircleEl.text.value = centerCircleText.text;
+            }
+            if (centerCircleEl.innerCircle) {
+                centerCircleEl.innerCircle.fill = centerCircleText.bgColor;
+            }
+        };
+
         const drawCenterCircle = () => {
             const _two = two;
             const width = _two.width;
@@ -90,19 +106,21 @@
                 y: radius + yOffset
             };
 
-            const arc = two.makeArcSegment(center.x, center.y, 0, radius * .16, 0, 2 * PI);
-            arc.noStroke();
+            const outerCircle = two.makeCircle(center.x, center.y, radius * .16);
+            outerCircle.noStroke();
+
+            const innerCircle = two.makeCircle(center.x, center.y, radius * .15);
+            innerCircle.noStroke();
+            centerCircleEl.innerCircle = innerCircle;
 
             const textSize = radius * ratios.textSize * .8;
-            centerCircleText = two.makeText(centerText, center.x, center.y + textSize / 3);
-            centerCircleText.fill = '#000';
-            centerCircleText.size = textSize;
-        };
+            const text = two.makeText('', center.x, center.y + textSize / 3);
+            text.fill = '#fff';
+            text.size = textSize;
+            text.weight = 'bolder';
+            centerCircleEl.text = text;
 
-        const drawCenterCircleText = () => {
-            if (centerCircleText) {
-                centerCircleText.value = centerText;
-            }
+            drawCenterCircleText();
         };
 
         const drawTickerCircle = outerRadius => {
@@ -167,6 +185,8 @@
                 text.size = radius * ratios.textSize;
 
                 group.add(arc, text);
+
+                wheelPart.bgColor = arc.fill;
             });
 
             group.translation.set(center.x, center.y);

@@ -83,7 +83,7 @@
 
     wheel.onSpinned(() => {
         const currentWheelPart = wheel.getCurrentWheelPart();
-        wheel.setCenterText(currentWheelPart.feelingLucky());
+        wheel.setCenterText(currentWheelPart.feelingLucky(), currentWheelPart.bgColor);
         wheel.drawCenterCircleText();
     });
 
