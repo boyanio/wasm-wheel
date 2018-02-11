@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { exec, execSync } = require('child_process');
+const { exec } = require('child_process');
 
 exports.task = (done) => {
     const buildDir = `${__dirname}/../../../build/wasm`;
