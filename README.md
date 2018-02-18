@@ -54,7 +54,11 @@ In order to compile Java into WebAssembly, I use [TeaVM](http://teavm.org/). The
 
 #### Kotlin
 
-[Kotlin Native](https://github.com/JetBrains/kotlin-native/) v0.6 is used to compile Kotlin to WebAssembly. It uses the JavaScript randomizer, as Kotlin doesn't have one built-in, so the way to do it, is to use C. However, I can't really build the project on a Windows machine.
+[Kotlin/Native](https://github.com/JetBrains/kotlin-native/) v0.6 is used to compile Kotlin to WebAssembly. Compiling Kotlin to native restricts you from importing Java libraries. In order to generate random numbers, one may use C instead (as in the C wheel part), but this requires further configuration using the `cinterop` tool. I think it is easier just to import the JavaScript one.
+
+I have problems using `kotlin.math` as it throws exception when calling my `feelingLucky` function (the code compiles, though). That's why I have done all the calculations on the JavaScript side.
+
+As I don't need the `main` function, I tried specifying `-nomain` on the compiler, but it still throws an exception when initializing the WebAssembly module.
 
 ## Build
 
