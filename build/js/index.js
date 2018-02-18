@@ -56,13 +56,16 @@
         .then(data => {
             data.wasmFiles.map(wasm => {
                 if (wasm.loader) {
+                    const loaderVersion = wasm.loader.version;
+                    const qs = loaderVersion ? `?v=${loaderVersion}` : '';
+
                     new Promise((resolve, reject) => {
                         const script = document.createElement('script');
                         document.body.appendChild(script);
                         script.onload = resolve;
                         script.onerror = reject;
                         script.async = true;
-                        script.src = `wasm/${wasm.file}-loader.js`;
+                        script.src = `wasm/${wasm.file}-loader.js${qs}`;
                     });
                 } else {
                     const readStringFromMemory = (exports, heap) => {
