@@ -118,7 +118,7 @@
     };
 
     const getName = (instance) => {
-        const ptr = instance.exports["'kfun:name$$Reference'"]();
+        const ptr = instance.exports["'kfun:name$$kotlin.String'"]();
         const size = getInt(ptr + 8);
         return toUTF16String(ptr + 8 + 4, size * 2);
     };
@@ -144,7 +144,7 @@
         wasmModule.env.tablebase = 0;
     };
 
-    const filename = 'wasm/wheel-part-kotlin.wasm';
+    const filename = 'wasm/wheel-part-kotlin.wasm?v=2';
     fetch(filename)
         .then(response => response.arrayBuffer())
         .then(bytes => WebAssembly.compile(bytes))

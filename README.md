@@ -54,7 +54,7 @@ In order to compile Java into WebAssembly, I use [TeaVM](http://teavm.org/). The
 
 #### Kotlin
 
-[Kotlin Native](https://github.com/JetBrains/kotlin-native/) v0.5 supports building WebAssembly (also on Windows hosts, as v0.4 allowed only macOS). Right now the generated wasm file is quite big - 2MB. I haven't found a way to optimize it yet. It uses the JavaScript randomizer, as Kotlin doesn't have one built-in, so the way to do it, is to use C. However, I can't really build the project on a Windows machine.
+[Kotlin Native](https://github.com/JetBrains/kotlin-native/) v0.6 is used to compile Kotlin to WebAssembly. It uses the JavaScript randomizer, as Kotlin doesn't have one built-in, so the way to do it, is to use C. However, I can't really build the project on a Windows machine.
 
 ## Build
 
