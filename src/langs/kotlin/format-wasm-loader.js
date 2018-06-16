@@ -59,7 +59,11 @@ function emitWheelPartLoadedEvent() {
   // Register custom wasm imports
   const customImportsIndex = modifiedContents.indexOf('function linkJavaScriptLibraries() {');
   modifiedContents = modifiedContents.substring(0, customImportsIndex) +
-    `konan_dependencies.env.Konan_js_rand = function(from, to) { return Math.floor(Math.random() * (to - from)) + from; }
+    `
+konan_dependencies.env.Konan_js_rand = function() {
+    var result = Math.random();
+    doubleToReturnSlot(result);
+};
 
 ` +
     modifiedContents.substring(customImportsIndex);
