@@ -3,10 +3,18 @@
 
     const wheelParts = [];
     document.addEventListener('wheelPartLoaded', e => {
-        wheelParts.push(e.detail);
+        // Check if the wheel part can genrate a random number
+        const wheelPart = e.detail;
+        const randomNumber = wheelPart.feelingLucky();
+        if (randomNumber > 0 && randomNumber <= 100) {
+            wheelParts.push(wheelPart);
 
-        wheel.setWheelParts(wheelParts);
-        wheel.drawWheel();
+            wheel.setWheelParts(wheelParts);
+            wheel.drawWheel();
+        }
+        else {
+            throw 'The wheel part ' + wheelPart.name + ' cannot generate random numbers between [1, 100]';
+        }
     }, false);
 
     const utf8ToString = (heap, offset) => {
