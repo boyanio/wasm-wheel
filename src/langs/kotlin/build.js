@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { exec } = require('child_process');
+const { formatWasmLoader } = require('./format-wasm-loader');
 
 exports.task = (done) => {
     const buildDir = `${__dirname}/../../../build/wasm`;
@@ -16,7 +17,7 @@ exports.task = (done) => {
         if (code !== 0)
             throw Error('Error when building the Kotlin wheel part');
 
-        fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-kotlin.wasm-loader.js`);
+        formatWasmLoader(`${targetDir}/wheelpart.wasm.js`, `${buildDir}/wheel-part-kotlin.wasm-loader.js`);
         fs.copyFileSync(`${targetDir}/wheelpart.wasm`, `${buildDir}/wheel-part-kotlin.wasm`);
 
         done();
