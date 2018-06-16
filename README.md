@@ -41,11 +41,11 @@ You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio
 
 #### Rust
 
-You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to install the nightly toolchain in order to compile to WebAssembly using the experimental LLVM compiler.
+You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to add the wasm32 target.
 
 ```
-$> rustup update nightly
-$> rustup target add wasm32-unknown-unknown --toolchain nightly
+$> rustup update
+$> rustup target add wasm32-unknown-unknown
 ```
 
 #### Java
