@@ -9,7 +9,7 @@ exports.task = (done) => {
         fs.mkdirSync(targetDir);
     }
 
-    const ls = exec(`konanc wheel-part.kt -target wasm32 -o ${targetDir}/wheel-part.wasm -verbose`, { cwd: __dirname });
+    const ls = exec(`konanc wheel-part.kt -target wasm32 -o ${targetDir}/wheelpart.wasm -verbose`, { cwd: __dirname });
     ls.stdout.pipe(process.stdout)
     ls.stderr.pipe(process.stdout)
     ls.on('exit', (code) => {
@@ -17,7 +17,7 @@ exports.task = (done) => {
             throw Error('Error when building the Kotlin wheel part');
 
         fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-kotlin.wasm-loader.js`);
-        fs.copyFileSync(`${targetDir}/wheel-part.wasm`, `${buildDir}/wheel-part-kotlin.wasm`);
+        fs.copyFileSync(`${targetDir}/wheelpart.wasm`, `${buildDir}/wheel-part-kotlin.wasm`);
 
         done();
     });
