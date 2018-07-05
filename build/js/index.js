@@ -2,10 +2,10 @@
     "use strict";
 
     const wheelParts = [];
-    document.addEventListener('wheelPartLoaded', e => {
+    document.addEventListener('wheelPartLoaded', async (e) => {
         // Check if the wheel part can genrate a random number
         const wheelPart = e.detail;
-        const randomNumber = wheelPart.feelingLucky();
+        const randomNumber = await wheelPart.feelingLucky();
         if (randomNumber > 0 && randomNumber <= 100) {
             wheelParts.push(wheelPart);
 
@@ -52,7 +52,7 @@
                 const event = new CustomEvent('wheelPartLoaded', {
                     detail: {
                         name: wheelPart,
-                        feelingLucky: () => exports.feelingLucky()
+                        feelingLucky: () => Promise.resolve(exports.feelingLucky())
                     }
                 });
                 document.dispatchEvent(event);
@@ -92,9 +92,9 @@
         wheel.drawCenterCircleText();
     });
 
-    wheel.onSpinned(() => {
+    wheel.onSpinned(async () => {
         const currentWheelPart = wheel.getCurrentWheelPart();
-        wheel.setCenterText(currentWheelPart.feelingLucky(), currentWheelPart.bgColor);
+        wheel.setCenterText(await currentWheelPart.feelingLucky(), currentWheelPart.bgColor);
         wheel.drawCenterCircleText();
     });
 

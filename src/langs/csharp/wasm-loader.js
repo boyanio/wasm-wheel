@@ -15,7 +15,7 @@
             const event = new CustomEvent('wheelPartLoaded', {
                 detail: {
                     name: 'C#',
-                    feelingLucky: () => invokeCSFunc('wheel-part-csharp', 'WheelOfWasm', 'Program', 'feelingLucky', null, 'number')
+                    feelingLucky: () => Promise.resolve(invokeCSFunc('wheel-part-csharp', 'WheelOfWasm', 'Program', 'feelingLucky', null, 'number'))
                 }
             });
             document.dispatchEvent(event);
