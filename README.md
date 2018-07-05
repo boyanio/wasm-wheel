@@ -60,7 +60,7 @@ As I don't need the `main` function, I tried specifying `-nomain` on the compile
 
 #### Go
 
-[Go 1.11](https://github.com/golang/go/milestone/62?closed=1) will have support for WebAssembly. The version is not released yet, but one can find the beta one - [go1.11beta1](https://golang.org/dl/). This is the first version of the implementation, so it will definitely undergo further improvements in the future. The communication from JavaScript to Go works with callbacks, which made me change all other calls to use promises. The output file is very big, but it is already being [addressed](https://github.com/golang/go/issues/6853).
+[Go 1.11](https://tip.golang.org/doc/go1.11) will have support for WebAssembly. The release is expected in August 2018, but one can find the beta one - [go1.11beta1](https://golang.org/dl/). This is the first version of the implementation, so it will definitely undergo further improvements in the future. The communication from JavaScript to Go works with callbacks, which made me change all other calls to use promises. The output file is very big, but it is already being [addressed](https://github.com/golang/go/issues/6853).
 
 ## Build
 
