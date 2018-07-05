@@ -59,9 +59,32 @@ gulp.task('build', ['clean', 'build-metadata', 'build-wasm']);
 
 gulp.task('serve', (done) => {
     const port = 8080;
+    const setHeaders = (res, path) => {
+        const ext = path.split('.').pop().toLowerCase();
+        let contentType;
+        switch (ext) {
+            case 'wasm':
+                contentType = 'application/wasm';
+                break;
+
+            case 'js':
+                contentType = 'text/javascript';
+                break;
+
+            case 'html':
+            case 'css':
+                contentType = `text/${ext}`;
+                break;
+        }
+
+        if (contentType) {
+            res.setHeader('Content-Type', contentType);
+        }
+    };
+
     console.log(`Serving HTTP on http://localhost:${port} ...`);
     connect()
-        .use(serveStatic(buildDir))
+        .use(serveStatic(buildDir, { 'setHeaders': setHeaders }))
         .use((req, res, next) => {
             const url = req.url;
             console.log(url);
