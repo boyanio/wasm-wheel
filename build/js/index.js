@@ -27,65 +27,63 @@
 
     const defaultReadStringFromMemory = (exports, heap) => utf8ToString(heap, exports.name());
 
-    const defaultWasmLoader = (wasmFile, readStringFromMemory) =>
-        fetch(`wasm/${wasmFile}`)
-            .then(response => response.arrayBuffer())
-            .then(bytes => WebAssembly.compile(bytes))
-            .then(wasmModule => {
-                // For the MVP, there is only one memory for all modules, however
-                // in the future, each module would probably get its own memory    
-                const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
-                return WebAssembly.instantiate(wasmModule, {
-                    env: {
-                        memory,
-                        // Some languages do not support random number generation easily,
-                        // so we allow them to reuse JavaScript's API
-                        random: () => Math.random()
-                    }
-                })
-                    .then(instance => ({ exports: instance.exports, memory }));
-            })
-            .then(({ exports, memory }) => {
-                const heap = new Uint8Array((exports.memory || memory).buffer);
-                const wheelPart = readStringFromMemory(exports, heap);
+    const defaultWasmLoader = async (wasmFile, readStringFromMemory) => {
+        const response = await fetch(`wasm/${wasmFile}`);
+        const bytes = await response.arrayBuffer();
+        const wasmModule = await WebAssembly.compile(bytes);
 
-                const event = new CustomEvent('wheelPartLoaded', {
-                    detail: {
-                        name: wheelPart,
-                        feelingLucky: () => Promise.resolve(exports.feelingLucky())
-                    }
-                });
-                document.dispatchEvent(event);
-            });
+        // For the WebAssembly MVP, there is only one memory for all modules, however
+        // in the future, each module would probably get its own memory    
+        const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
+        const instance = await WebAssembly.instantiate(wasmModule, {
+            env: {
+                memory,
+                // Some languages do not support random number generation easily,
+                // so we allow them to reuse JavaScript's API
+                random: () => Math.random()
+            }
+        });
+
+        const heap = new Uint8Array((instance.exports.memory || memory).buffer);
+        const wheelPart = readStringFromMemory(instance.exports, heap);
+
+        const event = new CustomEvent('wheelPartLoaded', {
+            detail: {
+                name: wheelPart,
+                feelingLucky: () => Promise.resolve(instance.exports.feelingLucky())
+            }
+        });
+        document.dispatchEvent(event);
+    };
     wheel.defaultWasmLoader = defaultWasmLoader;
 
-    fetch(`wheel-parts.json?v=${new Date().getTime()}`)
-        .then(response => response.json())
-        .then(data => {
-            data.wasmFiles.map(wasm => {
-                if (wasm.loader) {
-                    const loaderVersion = wasm.loader.version;
-                    const qs = loaderVersion ? `?v=${loaderVersion}` : '';
+    (async () => {
+        const response = await fetch(`wheel-parts.json?v=${new Date().getTime()}`);
+        const data = await response.json();
+        data.wasmFiles.map(wasm => {
+            if (wasm.loader) {
+                const loaderVersion = wasm.loader.version;
+                const qs = loaderVersion ? `?v=${loaderVersion}` : '';
 
-                    new Promise((resolve, reject) => {
-                        const script = document.createElement('script');
-                        document.body.appendChild(script);
-                        script.onload = resolve;
-                        script.onerror = reject;
-                        script.async = true;
-                        script.src = `wasm/${wasm.file}-loader.js${qs}`;
-                    });
-                } else {
-                    const readStringFromMemory = (exports, heap) => {
-                        if (wasm.name) {
-                            return wasm.name;
-                        }
-                        return defaultReadStringFromMemory(exports, heap);
-                    };
-                    defaultWasmLoader(wasm.file, readStringFromMemory);
-                }
-            });
+                new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    document.body.appendChild(script);
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    script.async = true;
+                    script.src = `wasm/${wasm.file}-loader.js${qs}`;
+                });
+            } else {
+                const readStringFromMemory = (exports, heap) => {
+                    if (wasm.name) {
+                        return wasm.name;
+                    }
+                    return defaultReadStringFromMemory(exports, heap);
+                };
+                defaultWasmLoader(wasm.file, readStringFromMemory);
+            }
         });
+    })();
 
     wheel.onSpinning(() => {
         wheel.setCenterText(null);

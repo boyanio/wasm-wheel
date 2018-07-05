@@ -24,20 +24,20 @@ exports.formatWasmLoader = (originalWasmLoaderFilePath, outputWasmLoaderFilePath
     modifiedContents = modifiedContents.substring(0, invokeModuleFuncIndex) +
         `
 function emitWheelPartLoadedEvent() {
-    var getInt = function(offset) {
+    const getInt = function(offset) {
         return heap[offset] |
             heap[offset + 1] << 8 |
             heap[offset + 2] << 16 |
             heap[offset + 3] << 24;
     };
 
-    var getName = function() {
+    const getName = function() {
         const ptr = instance.exports["'kfun:name$$kotlin.String'"]();
         const size = getInt(ptr + 8);
         return toUTF16String(ptr + 8 + 4, size * 2);
     };
 
-    var event = new CustomEvent('wheelPartLoaded', {
+    const event = new CustomEvent('wheelPartLoaded', {
         detail: {
             name: getName(),
             feelingLucky: () => Promise.resolve(instance.exports["'kfun:feelingLucky$$ValueType'"]())
@@ -61,7 +61,7 @@ function emitWheelPartLoadedEvent() {
     modifiedContents = modifiedContents.substring(0, customImportsIndex) +
         `
 konan_dependencies.env.Konan_js_rand = function() {
-    var result = Math.random();
+    const result = Math.random();
     doubleToReturnSlot(result);
 };
 
