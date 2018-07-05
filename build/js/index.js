@@ -1,4 +1,11 @@
-(function () {
+if (!WebAssembly.instantiateStreaming) {
+    WebAssembly.instantiateStreaming = async (response, imports) => {
+        const source = await (await response).arrayBuffer();
+        return await WebAssembly.instantiate(source, imports);
+    };
+}
+
+(() => {
     "use strict";
 
     const wheelParts = [];
@@ -28,14 +35,10 @@
     const defaultReadStringFromMemory = (exports, heap) => utf8ToString(heap, exports.name());
 
     const defaultWasmLoader = async (wasmFile, readStringFromMemory) => {
-        const response = await fetch(`wasm/${wasmFile}`);
-        const bytes = await response.arrayBuffer();
-        const wasmModule = await WebAssembly.compile(bytes);
-
         // For the WebAssembly MVP, there is only one memory for all modules, however
         // in the future, each module would probably get its own memory    
         const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
-        const instance = await WebAssembly.instantiate(wasmModule, {
+        const { mod, instance } = await WebAssembly.instantiateStreaming(fetch(`wasm/${wasmFile}`), {
             env: {
                 memory,
                 // Some languages do not support random number generation easily,
@@ -99,4 +102,4 @@
     document.getElementById('spinBtn').addEventListener('click', () => {
         wheel.spin(Math.random());
     }, false);
-}());
+})();

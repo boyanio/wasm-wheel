@@ -1,8 +1,6 @@
 (async () => {
   const go = new Go();
-  const response = await fetch('wasm/wheel-part-go.wasm');
-  const bytes = await response.arrayBuffer();
-  const result = await WebAssembly.instantiate(bytes, go.importObject);
+  const result = await WebAssembly.instantiateStreaming(fetch('wasm/wheel-part-go.wasm'), go.importObject);
 
   window.initGoCallbacks = async (getName, getFeelingLucky) => {
     const getNamePromise = () => new Promise((resolve, reject) => {
