@@ -15,6 +15,7 @@ In theory, when compiling each language, the output wasm file should be almost i
 - Rust
 - Java
 - Kotlin
+- Go
 
 ## Requirements
 
