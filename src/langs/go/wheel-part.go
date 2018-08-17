@@ -12,16 +12,16 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	nameCb := js.NewCallback(name)
-	defer nameCb.Close()
+	defer nameCb.Release()
 
 	feelingLuckyCb := js.NewCallback(feelingLucky)
-	defer feelingLuckyCb.Close()
+	defer feelingLuckyCb.Release()
 
 	initGoCallbacks := js.Global().Get("initGoCallbacks")
 	initGoCallbacks.Invoke(nameCb, feelingLuckyCb)
 
 	beforeUnloadCb := js.NewEventCallback(0, beforeUnload)
-	defer beforeUnloadCb.Close()
+	defer beforeUnloadCb.Release()
 	addEventListener := js.Global().Get("addEventListener")
 	addEventListener.Invoke("beforeunload", beforeUnloadCb)
 
@@ -39,4 +39,4 @@ func feelingLucky(args []js.Value) {
 
 func beforeUnload(event js.Value) {
 	beforeUnloadCh <- struct{}{}
-} 
+}

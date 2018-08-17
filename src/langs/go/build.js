@@ -11,7 +11,7 @@ const createWasmLoader = (destinationPath) => {
 exports.task = (done) => {
   const buildDir = `${__dirname}/../../../build/wasm`;
 
-  const ls = exec(`go build -o ${buildDir}/wheel-part-go.wasm wheel-part.go`, { cwd: __dirname, env: { GOOS: 'js', GOARCH: 'wasm' } });
+  const ls = exec(`go build -o ${buildDir}/wheel-part-go.wasm wheel-part.go`, { cwd: __dirname, env: Object.assign({}, process.env, { GOOS: 'js', GOARCH: 'wasm' }) });
   ls.stdout.pipe(process.stdout)
   ls.stderr.pipe(process.stdout)
   ls.on('exit', (code) => {
