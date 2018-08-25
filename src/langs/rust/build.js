@@ -8,7 +8,7 @@ exports.task = (done) => {
     ls.stderr.pipe(process.stdout)
     ls.on('exit', (code) => {
         if (code !== 0)
-            throw Error('Error when building the Java wheel part');
+            throw Error('Error when building the Rust wheel part');
 
         done();
     });
