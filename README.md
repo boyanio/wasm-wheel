@@ -82,7 +82,7 @@ $> gulp
 You can re-build individual wheel parts by running the following command:
 
 ```
-gulp build-wasm-[lang]
+$> gulp build-wasm-[lang]
 ```
 
 ## Questions & contribution
