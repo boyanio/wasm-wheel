@@ -27,7 +27,7 @@ exports.task = (done) => {
     ls.stderr.pipe(process.stdout)
     ls.on('exit', (code) => {
         if (code !== 0)
-            throw Error('Error when building the Java wheel part');
+            throw Error('Error when building the C# wheel part');
 
         fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-csharp.wasm-loader.js`);
         fs.copyFileSync(`${__dirname}/dna.js`, `${buildDir}/wheel-part-csharp.js`);
