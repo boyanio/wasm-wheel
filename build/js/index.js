@@ -34,26 +34,36 @@ if (!WebAssembly.instantiateStreaming) {
 
     const defaultReadStringFromMemory = (exports, heap) => utf8ToString(heap, exports.name());
 
+    const instantiateWasmFile = async (wasmFile, importObject) => {
+        try {
+            const { instance } = await WebAssembly.instantiateStreaming(fetch(`wasm/${wasmFile}`), importObject);
+            return instance;
+        } catch (err) {
+            console.log(`Error instantiating ${wasmFile}`);
+            console.log(err);
+        }
+    };
+
     const defaultWasmLoader = async (wasmFile, readStringFromMemory, importObject = {}) => {
         // For the WebAssembly MVP, there is only one memory for all modules, however
         // in the future, each module would probably get its own memory
         const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
-        const { mod, instance } = await WebAssembly.instantiateStreaming(fetch(`wasm/${wasmFile}`), Object.assign({
+        const wasmInstance = await instantiateWasmFile(wasmFile, Object.assign({
             env: {
                 memory,
-                // Some languages do not support random number generation easily,
+                // Some languages (like Rust) do not support random number generation easily,
                 // so we allow them to reuse JavaScript's API
                 random: () => Math.random()
             }
         }, importObject));
 
-        const heap = new Uint8Array((instance.exports.memory || memory).buffer);
-        const wheelPart = readStringFromMemory(instance.exports, heap);
+        const heap = new Uint8Array((wasmInstance.exports.memory || memory).buffer);
+        const wheelPart = readStringFromMemory(wasmInstance.exports, heap);
 
         const event = new CustomEvent('wheelPartLoaded', {
             detail: {
                 name: wheelPart,
-                feelingLucky: () => Promise.resolve(instance.exports.feelingLucky())
+                feelingLucky: () => Promise.resolve(wasmInstance.exports.feelingLucky())
             }
         });
         document.dispatchEvent(event);
