@@ -61,7 +61,7 @@ As I don't need the `main` function, I tried specifying `-nomain` on the compile
 
 #### Go
 
-[Go 1.11](https://tip.golang.org/doc/go1.11) will have support for WebAssembly. The release is expected in August 2018, but one can find the beta one - [go1.11rc2](https://golang.org/dl/). This is the first version of the implementation, so it will definitely undergo further improvements in the future. The communication from JavaScript to Go works with callbacks, which made me change all other calls to use promises. The output file is very big, but it is already being [addressed](https://github.com/golang/go/issues/6853).
+[Go 1.11](https://tip.golang.org/doc/go1.11) will have support for WebAssembly. The release is expected in August 2018, but one can use the RC - [go1.11rc2](https://golang.org/dl/). The communication from JavaScript to Go works with callbacks, which made me change all other calls to use promises. The output file is large so far (~ 1.5MB), but this is already being [addressed](https://github.com/golang/go/issues/6853).
 
 ## Build
 
@@ -77,6 +77,12 @@ The following command will compile all sources to WASM and set up a HTTP server 
 
 ```
 $> gulp
+```
+
+You can re-build individual wheel parts by running the following command:
+
+```
+gulp build-wasm-[lang]
 ```
 
 ## Questions & contribution
