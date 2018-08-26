@@ -31,7 +31,7 @@ gulp.task('build-wasm-folder', () => {
 });
 
 gulp.task('build-metadata', () => {
-    const wasmFiles = fs.readdirSync(langDir)
+    const wheelParts = fs.readdirSync(langDir)
         .map(lang => {
             const wasmFile = `wheel-part-${lang}.wasm`;
             const metaFile = path.join(langDir, `${lang}/meta.json`);
@@ -39,13 +39,13 @@ gulp.task('build-metadata', () => {
                 JSON.parse(fs.readFileSync(metaFile, 'utf8')) : {};
 
             return {
-                file: wasmFile,
+                fileName: wasmFile,
                 loader: meta.loader,
                 name: meta.name
             };
         });
 
-    fs.writeFileSync(`${buildDir}/wheel-parts.json`, JSON.stringify({ wasmFiles }));
+    fs.writeFileSync(`${buildDir}/wheel-parts.json`, JSON.stringify({ wheelParts }));
 });
 
 gulp.task('clean', () => {
