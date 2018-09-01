@@ -18,7 +18,7 @@ exports.task = (done) => {
         }
 
         return useMono ?
-            `${monoCompiler} -target:library -out:"${buildDir}\\wheel-part-csharp.dll" "${__dirname}\\wheel-part.cs"` :
+            `${monoCompiler} -target:library -out:"${buildDir}/wheel-part-csharp.dll" "${__dirname}/wheel-part.cs"` :
             `${vsCompiler} /nologo /target:library /out:"${buildDir}\\wheel-part-csharp.dll" "${__dirname}\\wheel-part.cs"`;
     };
 
