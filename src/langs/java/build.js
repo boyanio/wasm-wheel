@@ -3,7 +3,6 @@ const { exec } = require('child_process');
 
 exports.task = (done) => {
     const buildDir = `${__dirname}/../../../build/wasm`;
-    fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-java.wasm-loader.js`);
 
     const ls = exec('mvn clean install', { cwd: __dirname });
     ls.stdout.pipe(process.stdout)
@@ -12,6 +11,8 @@ exports.task = (done) => {
         if (code !== 0)
             throw Error('Error when building the Java wheel part');
 
+        fs.copyFileSync(`${__dirname}/target/wasm/output.wasm`, `${buildDir}/wheel-part-java.wasm`);
+        fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-java.wasm-loader.js`);
         done();
     });
 };

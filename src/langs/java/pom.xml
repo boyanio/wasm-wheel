@@ -67,8 +67,8 @@
             </goals>
             <configuration>
               <mainClass>wheelOfWasm.WheelPart</mainClass>
-              <targetDirectory>./../../../build/wasm</targetDirectory>
-              <targetFileName>wheel-part-java.wasm</targetFileName>
+              <targetDirectory>./target/wasm</targetDirectory>
+              <targetFileName>output.wasm</targetFileName>
               <targetType>WEBASSEMBLY</targetType>
               <optimizationLevel>FULL</optimizationLevel>
             </configuration>
