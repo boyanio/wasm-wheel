@@ -15,5 +15,5 @@
     };
 
     const readStringFromMemory = (exports, heap) => javaToJsString(heap, exports.name());
-    wheel.defaultWasmLoader('wheel-part-java.wasm', readStringFromMemory, {math: Math})
+    wheel.defaultWasmLoader('wheel-part-java.wasm', readStringFromMemory, { teavmMath: Math });
 })();
