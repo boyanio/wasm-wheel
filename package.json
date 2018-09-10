@@ -1,9 +1,15 @@
 {
     "name": "wasm-wheel",
     "title": "The Wheel of WebAssembly",
+    "description": "A demo project showing how different programming language sources can be compiled to WebAssembly and used independently on the same page.",
     "author": {
         "name": "Boyan Mihaylov",
         "url": "https://boyan.io"
+    },
+    "scripts": {
+        "start": "gulp",
+        "build": "gulp build",
+        "serve": "gulp serve"
     },
     "license": "MIT",
     "repository": {

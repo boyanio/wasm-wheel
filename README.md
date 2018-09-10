@@ -85,6 +85,15 @@ You can re-build individual wheel parts by running the following command:
 $> gulp build-wasm-[lang]
 ```
 
+## Docker
+
+As the entire set-up requires a lot of configuration, I have created a dockerfile to ease this process. At the moment the generated docker image is around _7.7GB_.
+
+```
+$> docker build -t wasm-wheel .
+$> docker run -p 8080:8080 -t wasm-wheel:latest
+```
+
 ## Questions & contribution
 
 You can follow me on Twitter with [@boyanio](https://twitter.com/boyanio) and ask me questions you might have. You can also open an issue here on GitHub. Pull requests are welcome, too :-)
