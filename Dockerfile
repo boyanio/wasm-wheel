@@ -10,9 +10,6 @@ WORKDIR /toolchains
 ENV JAVA_VERSION="8"
 
 RUN apt-get update && \
-    apt-get install --no-install-recommends --no-install-suggests -y software-properties-common && \
-    add-apt-repository -y ppa:openjdk-r/ppa && \
-    apt-get update && \
     apt-get install --no-install-recommends --no-install-suggests -y "openjdk-${JAVA_VERSION}-jdk" && \
     java -version
 
