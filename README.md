@@ -17,11 +17,26 @@ In theory, when compiling each language, the output wasm file should be almost i
 - Kotlin
 - Go
 
-## Requirements
+## Getting started
 
-- Node 8.9.1 (could work with a lower version, too, but this is what I have installed)
+Using Docker is the easiest way to get started. Note, though, that at the moment the generated docker image is around _7.7GB_.
 
-Furthermore, each language has further requirements.
+```
+$> docker build -t wasm-wheel .
+$> docker run -p 8080:8080 -t wasm-wheel:latest
+```
+
+## Manual installation
+
+The basic requirement to set up the repository is Node.js. I have tested with version _8.9.1_, but other (newer) versions would probably work as well.
+
+```
+$> git clone https://github.com/boyanio/wasm-wheel.git
+$> cd wasm-wheel
+$> npm install
+```
+
+Furthermore, each language has additional requirements.
 
 ### Compiling wheel parts
 
@@ -62,15 +77,7 @@ As I don't need the `main` function, I tried specifying `-nomain` on the compile
 
 [Go 1.11](https://tip.golang.org/doc/go1.11) adds experimental support for WebAssembly. The communication from JavaScript to Go works with callbacks, which made me change all other calls to use promises. The output file is quite large so far (~ 1.5MB), but this is already being [addressed](https://github.com/golang/go/issues/6853).
 
-## Build
-
-```
-$> git clone https://github.com/boyanio/wasm-wheel.git
-$> cd wasm-wheel
-$> npm install
-```
-
-## Run
+### Build & Run
 
 The following command will compile all sources to WASM and set up a HTTP server on port 8080. You can then access the site on `http://localhost:8080`.
 
@@ -82,15 +89,6 @@ You can re-build individual wheel parts by running the following command:
 
 ```
 $> gulp build-wasm-[lang]
-```
-
-## Docker
-
-As the entire set-up requires a lot of configuration, I have created a dockerfile to ease this process. At the moment the generated docker image is around _7.7GB_.
-
-```
-$> docker build -t wasm-wheel .
-$> docker run -p 8080:8080 -t wasm-wheel:latest
 ```
 
 ## Questions & contribution
