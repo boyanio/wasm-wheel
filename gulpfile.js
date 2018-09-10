@@ -22,15 +22,14 @@ for (const lang of langs) {
     wasmTasks.push(task);
 }
 
-gulp.task('build-wasm', ['build-wasm-folder', ...wasmTasks]);
-
-gulp.task('build-wasm-folder', () => {
+gulp.task('build-wasm-folder', (done) => {
     if (!fs.existsSync(buildWasmDir)) {
         fs.mkdirSync(buildWasmDir);
     }
+    done();
 });
 
-gulp.task('build-metadata', () => {
+gulp.task('build-metadata', (done) => {
     const wheelParts = fs.readdirSync(langDir)
         .map(lang => {
             const wasmFile = `wheel-part-${lang}.wasm`;
@@ -46,18 +45,22 @@ gulp.task('build-metadata', () => {
         });
 
     fs.writeFileSync(`${buildDir}/wheel-parts.json`, JSON.stringify({ wheelParts }));
+    done();
 });
 
-gulp.task('clean', () => {
+gulp.task('build-wasm', gulp.series.apply(gulp, ['build-wasm-folder', ...wasmTasks]));
+
+gulp.task('clean', (done) => {
     if (fs.existsSync(buildWasmDir)) {
         const files = fs.readdirSync(buildWasmDir);
         for (const file of files) {
             fs.unlinkSync(path.join(buildWasmDir, file));
         }
     }
+    done();
 });
 
-gulp.task('build', ['clean', 'build-metadata', 'build-wasm']);
+gulp.task('build', gulp.series('clean', 'build-metadata', 'build-wasm'));
 
 gulp.task('serve', (done) => {
     const port = 8080;
@@ -95,4 +98,4 @@ gulp.task('serve', (done) => {
         .listen(port, done);
 });
 
-gulp.task('default', ['build', 'serve']);
+gulp.task('default', gulp.series('build', 'serve'));
