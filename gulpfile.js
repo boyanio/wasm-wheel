@@ -49,9 +49,11 @@ gulp.task('build-metadata', () => {
 });
 
 gulp.task('clean', () => {
-    const files = fs.readdirSync(buildWasmDir);
-    for (const file of files) {
-        fs.unlinkSync(path.join(buildWasmDir, file));
+    if (fs.existsSync(buildWasmDir)) {
+        const files = fs.readdirSync(buildWasmDir);
+        for (const file of files) {
+            fs.unlinkSync(path.join(buildWasmDir, file));
+        }
     }
 });
 
