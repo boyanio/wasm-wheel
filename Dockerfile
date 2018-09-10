@@ -70,6 +70,10 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get install --no-install-recommends --no-install-suggests -y nodejs && \
     node -v
 
+# Configure git
+RUN apt-get install --no-install-recommends --no-install-suggests -y git && \
+    git --version
+
 # Create the working dir
 WORKDIR /app
 
