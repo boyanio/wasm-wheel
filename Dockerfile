@@ -6,7 +6,7 @@ FROM ubuntu:xenial
 
 WORKDIR /toolchains
 
-## Configure Java
+# Configure Java
 ENV JAVA_VERSION="8"
 
 RUN apt-get update && \
@@ -43,10 +43,10 @@ RUN go version
 
 # Configure C#
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-    apt install -y apt-transport-https && \
+    apt install --no-install-recommends --no-install-suggests -y apt-transport-https && \
     echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
     apt update && \
-    apt install -y mono-devel && \
+    apt install --no-install-recommends --no-install-suggests -y mono-devel && \
     mcs --version
 
 # Configure Rust
@@ -66,7 +66,9 @@ RUN rustup update && \
 #
 
 # Configure Node.js
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
+ENV NODE_VERSION="8"
+
+RUN curl -sL "https://deb.nodesource.com/setup_${NODE_VERSION}.x" | bash - && \
     apt-get install --no-install-recommends --no-install-suggests -y nodejs && \
     node -v
 
