@@ -20,7 +20,6 @@ In theory, when compiling each language, the output wasm file should be almost i
 ## Requirements
 
 - Node 8.9.1 (could work with a lower version, too, but this is what I have installed)
-- emscripten (SDK 1.37.22)
 
 Furthermore, each language has further requirements.
 
