@@ -1,26 +1,27 @@
 const fs = require('fs');
-const { Compiler } = require('assemblyscript');
+const asc = require('assemblyscript/bin/asc');
 
 exports.task = (done) => {
-    const wasmModule = Compiler.compileFile(`${__dirname}/wheel-part.ts`, {
-        silent: true,
-        noRuntime: true,
-        target: 'wasm32'
-    });
-    if (!wasmModule) {
-        console.log(Compiler.lastDiagnostics);
-        throw Error('Compilation failed.');
-    }
+    const relativeBuildDir = '../../../build/wasm';
+    const buildDir = `${__dirname}/${relativeBuildDir}`;
 
-    wasmModule.optimize();
+    const ascDone = (err) => {
+        if (err) {
+            throw err;
+        }
 
-    if (!wasmModule.validate())
-        throw Error('Validation failed');
+        fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-assemblyscript.wasm-loader.js`);
+        done();
+    };
 
-    const buildDir = `${__dirname}/../../../build/wasm`;
-    fs.writeFileSync(`${buildDir}/wheel-part-assemblyscript.wasm`, new Buffer(wasmModule.emitBinary()));
-    wasmModule.dispose();
-
-    fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-assemblyscript.wasm-loader.js`);
-    done();
+    asc.main([
+        'wheel-part.ts',
+        '--baseDir', __dirname,
+        '--binaryFile', `${relativeBuildDir}/wheel-part-assemblyscript.wasm`,
+        '--importMemory',
+        '--optimize',
+        '--measure',
+        '--validate',
+        '--use', 'Math=JSMath'
+    ], ascDone);
 };

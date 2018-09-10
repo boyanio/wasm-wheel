@@ -27,16 +27,23 @@
         }
     };
 
-    const defaultWasmLoader = async (wasmFileName, readStringFromMemory, importObject = {}) => {
-        const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
-        const wasmInstance = await instantiateWasmFile(wasmFileName, Object.assign({
-            env: {
+    const createImportObject = (memory, customImportObject) => {
+        return Object.assign(customImportObject, {
+            env: Object.assign(customImportObject.env || {}, {
                 memory,
+
                 // Some languages (like Rust) do not support random number generation easily,
                 // so we allow them to reuse JavaScript's API
                 random: () => Math.random()
-            }
-        }, importObject));
+            })
+        });
+    }
+
+    const defaultWasmLoader = async (wasmFileName, readStringFromMemory, importObject = {}) => {
+        const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
+        const wasmInstance = await instantiateWasmFile(
+            wasmFileName,
+            createImportObject(memory, importObject));
 
         const heap = new Uint8Array((wasmInstance.exports.memory || memory).buffer);
         const wheelPart = readStringFromMemory(wasmInstance.exports, heap);

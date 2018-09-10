@@ -15,11 +15,14 @@
         const length = getInt(heap, offset);
         const chars = new Array(length);
         for (let i = 0; i < length; i++) {
-            chars[i] = getUshort(heap, offset + 8 + (i * 2));
+            chars[i] = getUshort(heap, offset + 4 + (i * 2));
         }
         return String.fromCharCode.apply(String, chars);
     };
 
     const readStringFromMemory = (exports, heap) => utf16leToString(heap, exports.name());
-    wheel.defaultWasmLoader('wheel-part-assemblyscript.wasm', readStringFromMemory)
+    const importObject = {
+        JSMath: Math
+    };
+    wheel.defaultWasmLoader('wheel-part-assemblyscript.wasm?v=2', readStringFromMemory, importObject)
 })();

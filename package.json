@@ -18,7 +18,7 @@
   },
   "version": "1.0.0",
   "devDependencies": {
-    "assemblyscript": "^0.3.0",
+    "assemblyscript": "github:AssemblyScript/assemblyscript",
     "connect": "^3.6.5",
     "gulp": "^4.0.0",
     "serve-static": "^1.13.1",
