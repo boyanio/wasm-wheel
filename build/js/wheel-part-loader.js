@@ -1,93 +1,94 @@
+/* globals wheel */
 (() => {
-    "use strict";
+  'use strict';
 
-    if (!WebAssembly.instantiateStreaming) {
-        WebAssembly.instantiateStreaming = async (response, imports) => {
-            const source = await (await response).arrayBuffer();
-            return await WebAssembly.instantiate(source, imports);
-        };
+  if (!WebAssembly.instantiateStreaming) {
+    WebAssembly.instantiateStreaming = async (response, imports) => {
+      const source = await (await response).arrayBuffer();
+      return await WebAssembly.instantiate(source, imports);
+    };
+  }
+
+  const utf8ToString = (heap, offset) => {
+    let s = '';
+    for (let i = offset; heap[i]; i++) {
+      s += String.fromCharCode(heap[i]);
     }
+    return s;
+  };
 
-    const utf8ToString = (heap, offset) => {
-        let s = '';
-        for (let i = offset; heap[i]; i++) {
-            s += String.fromCharCode(heap[i]);
-        }
-        return s;
-    };
+  const defaultReadStringFromMemory = (exports, heap) => utf8ToString(heap, exports.name());
 
-    const defaultReadStringFromMemory = (exports, heap) => utf8ToString(heap, exports.name());
-
-    const instantiateWasmFile = async (wasmFileName, importObject) => {
-        try {
-            const { instance } = await WebAssembly.instantiateStreaming(fetch(`wasm/${wasmFileName}`), importObject);
-            return instance;
-        } catch (err) {
-            console.error(`Error instantiating ${wasmFileName}. ${err}`);
-        }
-    };
-
-    const createImportObject = (memory, customImportObject) => {
-        return Object.assign(customImportObject, {
-            env: Object.assign(customImportObject.env || {}, {
-                memory,
-
-                // Some languages (like Rust) do not support random number generation easily,
-                // so we allow them to reuse JavaScript's API
-                random: () => Math.random()
-            })
-        });
+  const instantiateWasmFile = async (wasmFileName, importObject) => {
+    try {
+      const { instance } = await WebAssembly.instantiateStreaming(fetch(`wasm/${wasmFileName}`), importObject);
+      return instance;
+    } catch (err) {
+      console.error(`Error instantiating ${wasmFileName}. ${err}`);
     }
+  };
 
-    const defaultWasmLoader = async (wasmFileName, readStringFromMemory, importObject = {}) => {
-        const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
-        const wasmInstance = await instantiateWasmFile(
-            wasmFileName,
-            createImportObject(memory, importObject));
+  const createImportObject = (memory, customImportObject) => {
+    return Object.assign(customImportObject, {
+      env: Object.assign(customImportObject.env || {}, {
+        memory,
 
-        const heap = new Uint8Array((wasmInstance.exports.memory || memory).buffer);
-        const wheelPart = readStringFromMemory(wasmInstance.exports, heap);
+        // Some languages (like Rust) do not support random number generation easily,
+        // so we allow them to reuse JavaScript's API
+        random: () => Math.random()
+      })
+    });
+  };
 
-        const event = new CustomEvent('wheelPartLoaded', {
-            detail: {
-                name: wheelPart,
-                feelingLucky: () => Promise.resolve(wasmInstance.exports.feelingLucky())
-            }
-        });
-        document.dispatchEvent(event);
-    };
-    wheel.defaultWasmLoader = defaultWasmLoader;
+  const defaultWasmLoader = async (wasmFileName, readStringFromMemory, importObject = {}) => {
+    const memory = new WebAssembly.Memory({ initial: 2, maximum: 10 });
+    const wasmInstance = await instantiateWasmFile(
+      wasmFileName,
+      createImportObject(memory, importObject));
 
-    const loadWheelPartWithCustomLoader = (wasmFileName, loaderVersion) => {
-        const qs = loaderVersion ? `?v=${loaderVersion}` : '';
+    const heap = new Uint8Array((wasmInstance.exports.memory || memory).buffer);
+    const wheelPart = readStringFromMemory(wasmInstance.exports, heap);
 
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            document.body.appendChild(script);
-            script.onload = resolve;
-            script.onerror = reject;
-            script.async = true;
-            script.src = `wasm/${wasmFileName}-loader.js${qs}`;
-        });
-    };
+    const event = new CustomEvent('wheelPartLoaded', {
+      detail: {
+        name: wheelPart,
+        feelingLucky: () => Promise.resolve(wasmInstance.exports.feelingLucky())
+      }
+    });
+    document.dispatchEvent(event);
+  };
+  wheel.defaultWasmLoader = defaultWasmLoader;
 
-    const loadWheelParts = async () => {
-        const wheelPartsResponse = await fetch(`wheel-parts.json?v=${new Date().getTime()}`);
-        const wheelPartsJsonResponse = await wheelPartsResponse.json();
+  const loadWheelPartWithCustomLoader = (wasmFileName, loaderVersion) => {
+    const qs = loaderVersion ? `?v=${loaderVersion}` : '';
 
-        wheelPartsJsonResponse.wheelParts.forEach(wheelPart => {
-            if (wheelPart.loader) {
-                const loaderVersion = wheelPart.loader.version;
-                loadWheelPartWithCustomLoader(wheelPart.fileName, loaderVersion);
-            } else {
-                const readStringFromMemory = wheelPart.name ?
-                    () => wheelPart.name :
-                    defaultReadStringFromMemory;
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      document.body.appendChild(script);
+      script.onload = resolve;
+      script.onerror = reject;
+      script.async = true;
+      script.src = `wasm/${wasmFileName}-loader.js${qs}`;
+    });
+  };
 
-                defaultWasmLoader(wheelPart.fileName, readStringFromMemory);
-            }
-        });
-    };
+  const loadWheelParts = async () => {
+    const wheelPartsResponse = await fetch(`wheel-parts.json?v=${new Date().getTime()}`);
+    const wheelPartsJsonResponse = await wheelPartsResponse.json();
 
-    loadWheelParts();
+    wheelPartsJsonResponse.wheelParts.forEach(wheelPart => {
+      if (wheelPart.loader) {
+        const loaderVersion = wheelPart.loader.version;
+        loadWheelPartWithCustomLoader(wheelPart.fileName, loaderVersion);
+      } else {
+        const readStringFromMemory = wheelPart.name ?
+          () => wheelPart.name :
+          defaultReadStringFromMemory;
+
+        defaultWasmLoader(wheelPart.fileName, readStringFromMemory);
+      }
+    });
+  };
+
+  loadWheelParts();
 })();

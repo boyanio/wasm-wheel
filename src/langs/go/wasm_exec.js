@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Source: https://raw.githubusercontent.com/golang/go/master/misc/wasm/wasm_exec.js
 
 // Copyright 2018 The Go Authors. All rights reserved.
