@@ -1,18 +1,14 @@
 const fs = require('fs');
-const { exec } = require('child_process');
+const { promisify } = require('util');
+const execp = require('../../execp');
 
-exports.task = (done) => {
-    const buildDir = `${__dirname}/../../../build/wasm`;
+const copyFile = promisify(fs.copyFile);
 
-    const ls = exec('mvn -B clean install', { cwd: __dirname });
-    ls.stdout.pipe(process.stdout)
-    ls.stderr.pipe(process.stdout)
-    ls.on('exit', (code) => {
-        if (code !== 0)
-            throw Error('Error when building the Java wheel part');
+module.exports = async function () {
+  const buildDir = `${__dirname}/../../../build/wasm`;
 
-        fs.copyFileSync(`${__dirname}/target/wasm/output.wasm`, `${buildDir}/wheel-part-java.wasm`);
-        fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-java.wasm-loader.js`);
-        done();
-    });
+  await execp('mvn -B clean install', { cwd: __dirname });
+
+  await copyFile(`${__dirname}/target/wasm/output.wasm`, `${buildDir}/wheel-part-java.wasm`);
+  await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-java.wasm-loader.js`);
 };

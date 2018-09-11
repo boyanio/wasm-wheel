@@ -1,27 +1,24 @@
 const fs = require('fs');
+const { promisify } = require('util');
 const asc = require('assemblyscript/bin/asc');
 
-exports.task = (done) => {
-    const relativeBuildDir = '../../../build/wasm';
-    const buildDir = `${__dirname}/${relativeBuildDir}`;
+const ascMain = promisify(asc.main);
+const copyFile = promisify(fs.copyFile);
 
-    const ascDone = (err) => {
-        if (err) {
-            throw err;
-        }
+module.exports = async function () {
+  const relativeBuildDir = '../../../build/wasm';
+  const buildDir = `${__dirname}/${relativeBuildDir}`;
 
-        fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-assemblyscript.wasm-loader.js`);
-        done();
-    };
+  await ascMain([
+    'wheel-part.ts',
+    '--baseDir', __dirname,
+    '--binaryFile', `${relativeBuildDir}/wheel-part-assemblyscript.wasm`,
+    '--importMemory',
+    '--optimize',
+    '--measure',
+    '--validate',
+    '--use', 'Math=JSMath'
+  ]);
 
-    asc.main([
-        'wheel-part.ts',
-        '--baseDir', __dirname,
-        '--binaryFile', `${relativeBuildDir}/wheel-part-assemblyscript.wasm`,
-        '--importMemory',
-        '--optimize',
-        '--measure',
-        '--validate',
-        '--use', 'Math=JSMath'
-    ], ascDone);
+  await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-assemblyscript.wasm-loader.js`);
 };

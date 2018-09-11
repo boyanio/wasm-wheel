@@ -1,12 +1,11 @@
 const compiler = require('webassembly/cli/compiler');
+const { promisify } = require('util');
 
-exports.task = (done) => {
-    compiler.main(
-        ['-o', `${__dirname}'/../../../build/wasm/wheel-part-c.wasm`, `${__dirname}/wheel-part.c`],
-        (err, filename) => {
-            if (err)
-                throw err;
+const compilerMain = promisify(compiler.main);
 
-            done();
-        });
+module.exports = async function () {
+  await compilerMain([
+    '-o', `${__dirname}'/../../../build/wasm/wheel-part-c.wasm`,
+    `${__dirname}/wheel-part.c`
+  ]);
 };

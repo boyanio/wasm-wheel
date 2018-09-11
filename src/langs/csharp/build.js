@@ -1,39 +1,35 @@
 const fs = require('fs');
-const { exec, execSync } = require('child_process');
+const { promisify } = require('util');
+const execp = require('../../execp');
 
-exports.task = (done) => {
-    const buildDir = `${__dirname}/../../../build/wasm`;
+const copyFile = promisify(fs.copyFile);
 
-    const execCmd = () => {
-        const monoCompiler = 'mcs';
-        const vsCompiler = 'C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc';
+module.exports = async function () {
+  const buildDir = `${__dirname}/../../../build/wasm`;
 
-        let useMono = false;
-        try {
-            execSync(`${monoCompiler} --about`);
-            useMono = true;
-            console.log('Mono is present on this machine, using mcs');
-        } catch (e) {
-            console.log('Mono seems to be missing on this machine. Using csc instead');
-        }
+  const detectBuildCmd = async () => {
+    const monoCompiler = 'mcs';
+    const vsCompiler = 'C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc';
 
-        return useMono ?
-            `${monoCompiler} -target:library -out:"${buildDir}/wheel-part-csharp.dll" "${__dirname}/wheel-part.cs"` :
-            `${vsCompiler} /nologo /target:library /out:"${buildDir}\\wheel-part-csharp.dll" "${__dirname}\\wheel-part.cs"`;
-    };
+    let useMono = false;
+    try {
+      await execp(`${monoCompiler} --about`);
+      useMono = true;
+      console.log('Mono is present on this machine, using mcs');
+    } catch (e) {
+      console.log('Mono seems to be missing on this machine. Using csc instead');
+    }
 
-    const ls = exec(execCmd());
-    ls.stdout.pipe(process.stdout)
-    ls.stderr.pipe(process.stdout)
-    ls.on('exit', (code) => {
-        if (code !== 0)
-            throw Error('Error when building the C# wheel part');
+    return useMono ?
+      `${monoCompiler} -target:library -out:"${buildDir}/wheel-part-csharp.dll" "${__dirname}/wheel-part.cs"` :
+      `${vsCompiler} /nologo /target:library /out:"${buildDir}\\wheel-part-csharp.dll" "${__dirname}\\wheel-part.cs"`;
+  };
 
-        fs.copyFileSync(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-csharp.wasm-loader.js`);
-        fs.copyFileSync(`${__dirname}/dna.js`, `${buildDir}/wheel-part-csharp.js`);
-        fs.copyFileSync(`${__dirname}/dna.wasm`, `${buildDir}/wheel-part-csharp.wasm`);
-        fs.copyFileSync(`${__dirname}/corlib.dll`, `${buildDir}/corlib.dll`);
+  const cmd = await detectBuildCmd();
+  await execp(cmd);
 
-        done();
-    });
+  await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-csharp.wasm-loader.js`);
+  await copyFile(`${__dirname}/dna.js`, `${buildDir}/wheel-part-csharp.js`);
+  await copyFile(`${__dirname}/dna.wasm`, `${buildDir}/wheel-part-csharp.wasm`);
+  await copyFile(`${__dirname}/corlib.dll`, `${buildDir}/corlib.dll`);
 };

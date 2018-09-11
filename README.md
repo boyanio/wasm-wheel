@@ -84,13 +84,14 @@ As I don't need the `main` function, I tried specifying `-nomain` on the compile
 The following command will compile all sources to WASM and set up a HTTP server on port 8080. You can then access the site on `http://localhost:8080`.
 
 ```
-$> gulp
+$> npm run build
+$> npm run serve
 ```
 
 You can re-build individual wheel parts by running the following command:
 
 ```
-$> gulp build-wasm-[lang]
+$> npm run build -- [lang]
 ```
 
 ## Questions & contribution
