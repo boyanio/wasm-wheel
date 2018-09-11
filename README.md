@@ -22,7 +22,9 @@ In theory, when compiling each language, the output wasm file should be almost i
 Using Docker is the easiest way to get started. Note, though, that at the moment the generated docker image is around _7.7GB_.
 
 ```
-$> docker build -t wasm-wheel .
+$> git clone https://github.com/boyanio/wasm-wheel.git
+$> cd wasm-wheel
+$> docker build . -t wasm-wheel
 $> docker run -p 8080:8080 -t wasm-wheel:latest
 ```
 
