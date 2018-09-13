@@ -21,7 +21,7 @@ In theory, when compiling each language, the output wasm file should be almost i
 
 ## Getting started
 
-Using Docker is the easiest way to get started. Note, though, that at the moment the generated docker image is around _7.7GB_.
+Using Docker is the easiest way to get started. Note, though, that at the moment the generated docker image is around _2.6GB_.
 
 ```
 $> git clone https://github.com/boyanio/wasm-wheel.git
