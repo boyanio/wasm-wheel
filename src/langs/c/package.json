@@ -8,7 +8,7 @@
     "url": "https://boyan.io"
   },
   "scripts": {
-    "build": "node -e \"(require('./build'))()\""
+    "build": "node -e \"(require('./build').default)()\""
   },
   "license": "MIT",
   "repository": {

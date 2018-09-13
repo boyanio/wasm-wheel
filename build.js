@@ -55,8 +55,8 @@ const buildWheelPart = async (lang) => {
     throw `Cannot find build.js for ${lang} wheel part`;
   }
 
-  const buildFn = require(`./src/langs/${lang}/build`);
-  await buildFn();
+  const build = require(`./src/langs/${lang}/build`).default;
+  await build(buildWasmDir);
 };
 
 const buildAllWheelParts = async () => {

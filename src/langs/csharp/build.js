@@ -4,9 +4,7 @@ const execp = require('../../execp');
 
 const copyFile = promisify(fs.copyFile);
 
-module.exports = async function () {
-  const buildDir = `${__dirname}/../../../build/wasm`;
-
+const buildWasm = async (buildDir) => {
   const detectBuildCmd = async () => {
     const monoCompiler = 'mcs';
     const vsCompiler = 'C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc';
@@ -27,9 +25,20 @@ module.exports = async function () {
 
   const cmd = await detectBuildCmd();
   await execp(cmd);
+};
 
+const buildLoader = async (buildDir) => {
   await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-csharp.wasm-loader.js`);
   await copyFile(`${__dirname}/dna.js`, `${buildDir}/wheel-part-csharp.js`);
   await copyFile(`${__dirname}/dna.wasm`, `${buildDir}/wheel-part-csharp.wasm`);
   await copyFile(`${__dirname}/corlib.dll`, `${buildDir}/corlib.dll`);
+};
+
+exports.buildWasm = buildWasm;
+exports.buildLoader = buildLoader;
+exports.default = async (buildDir) => {
+  buildDir = buildDir || process.env.BUILDDIR;
+  
+  await buildWasm(buildDir);
+  await buildLoader(buildDir);
 };

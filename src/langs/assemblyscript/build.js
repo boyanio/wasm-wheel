@@ -3,11 +3,9 @@ const { promisify } = require('util');
 const execp = require('../../execp');
 
 const copyFile = promisify(fs.copyFile);
+const rename = promisify(fs.rename);
 
-module.exports = async function () {
-  const relativeBuildDir = '../../../build/wasm';
-  const buildDir = `${__dirname}/${relativeBuildDir}`;
-
+const buildWasm = async (buildDir) => {
   await execp('npm install', { cwd: __dirname });
 
   const asc = require('assemblyscript/bin/asc');
@@ -15,7 +13,7 @@ module.exports = async function () {
   await ascMain([
     'wheel-part.ts',
     '--baseDir', __dirname,
-    '--binaryFile', `${relativeBuildDir}/wheel-part-assemblyscript.wasm`,
+    '--binaryFile', 'output.wasm',
     '--importMemory',
     '--optimize',
     '--measure',
@@ -23,5 +21,18 @@ module.exports = async function () {
     '--use', 'Math=JSMath'
   ]);
 
+  await rename(`${__dirname}/output.wasm`, `${buildDir}/wheel-part-assemblyscript.wasm`);
+};
+
+const buildLoader = async (buildDir) => {
   await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-assemblyscript.wasm-loader.js`);
+};
+
+exports.buildWasm = buildWasm;
+exports.buildLoader = buildLoader;
+exports.default = async (buildDir) => {
+  buildDir = buildDir || process.env.BUILDDIR;
+  
+  await buildWasm(buildDir);
+  await buildLoader(buildDir);
 };
