@@ -10,7 +10,7 @@
   "scripts": {
     "build": "node build.js",
     "serve": "node serve.js",
-    "lint": "node node_modules/eslint/bin/eslint.js .",
+    "lint": "node_modules/.bin/eslint . --ignore-path .gitignore",
     "start": "npm run build && npm run serve"
   },
   "license": "MIT",
