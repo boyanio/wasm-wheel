@@ -1,5 +1,7 @@
 # The Wheel of WebAssembly
 
+[![Build Status](https://travis-ci.org/boyanio/wasm-wheel.svg?branch=master)](https://travis-ci.org/boyanio/wasm-wheel)
+
 The _Wheel of WebAssembly_ is a project aiming to show the diversity of languages that compile to WebAssembly. My initial idea was to define two functions in each language:
 
 - `name()` - returning the name of the language. This is used to render each part of the wheel.
