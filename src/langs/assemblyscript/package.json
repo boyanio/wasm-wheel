@@ -1,0 +1,21 @@
+{
+  "name": "assemblyscript-wasm-wheel-part",
+  "title": "AssemblyScript wheel part for the Wheel of WebAssembly",
+  "description": "AssemblyScript wheel part fo the Wheel of WebAssembly",
+  "version": "1.0.0",
+  "author": {
+    "name": "Boyan Mihaylov",
+    "url": "https://boyan.io"
+  },
+  "scripts": {
+    "build": "node -e \"(require('./build'))()\""
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/boyanio/wasm-wheel.git"
+  },
+  "devDependencies": {
+    "assemblyscript": "github:AssemblyScript/assemblyscript"
+  }
+}

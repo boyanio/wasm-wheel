@@ -2,6 +2,7 @@
   "name": "wasm-wheel",
   "title": "The Wheel of WebAssembly",
   "description": "A demo project showing how different programming language sources can be compiled to WebAssembly and used independently on the same page.",
+  "version": "1.0.0",
   "author": {
     "name": "Boyan Mihaylov",
     "url": "https://boyan.io"
@@ -17,12 +18,9 @@
     "type": "git",
     "url": "https://github.com/boyanio/wasm-wheel.git"
   },
-  "version": "1.0.0",
   "devDependencies": {
-    "assemblyscript": "github:AssemblyScript/assemblyscript",
     "connect": "^3.6.5",
     "eslint": "^5.5.0",
-    "serve-static": "^1.13.1",
-    "webassembly": "^0.11.0"
+    "serve-static": "^1.13.1"
   }
 }

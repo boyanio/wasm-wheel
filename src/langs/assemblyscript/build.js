@@ -1,14 +1,17 @@
 const fs = require('fs');
 const { promisify } = require('util');
-const asc = require('assemblyscript/bin/asc');
+const execp = require('../../execp');
 
-const ascMain = promisify(asc.main);
 const copyFile = promisify(fs.copyFile);
 
 module.exports = async function () {
   const relativeBuildDir = '../../../build/wasm';
   const buildDir = `${__dirname}/${relativeBuildDir}`;
 
+  await execp('npm install', { cwd: __dirname });
+
+  const asc = require('assemblyscript/bin/asc');
+  const ascMain = promisify(asc.main);
   await ascMain([
     'wheel-part.ts',
     '--baseDir', __dirname,
