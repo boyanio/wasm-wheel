@@ -1,7 +1,7 @@
 const connect = require('connect');
 const serveStatic = require('serve-static');
 
-const port = 8080;
+const port = process.argv.length > 2 ? parseInt(process.argv[2], 10) : 8080;
 const buildDir = `${__dirname}/build`;
 
 const setContentType = (response, path) => {
