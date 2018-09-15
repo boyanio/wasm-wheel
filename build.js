@@ -13,7 +13,14 @@ const buildDir = `${__dirname}/build`;
 const buildWasmDir = `${buildDir}/wasm`;
 const langDir = `${__dirname}/src/langs`;
 
-const createOrCleanBuildWasmDir = async () => {
+const createBuildWasmDir = async () => {
+  if (!(await exists(buildWasmDir))) {
+    console.log('Creating the build wasm directory...');
+    await mkdir(buildWasmDir);
+  }
+};
+
+const cleanBuildWasmDir = async () => {
   if (await exists(buildWasmDir)) {
     console.log('Cleaning the build wasm directory...');
 
@@ -21,13 +28,10 @@ const createOrCleanBuildWasmDir = async () => {
     for (const file of files) {
       await unlink(path.join(buildWasmDir, file));
     }
-  } else {
-    console.log('Creating the build wasm directory...');
-    await mkdir(buildWasmDir);
   }
 };
 
-const createMetadataFile = async () => {
+const buildMetadata = async () => {
   console.log('Creating the metdata file for all wheel parts...');
 
   const wheelParts = [];
@@ -48,14 +52,18 @@ const createMetadataFile = async () => {
   await writeFile(`${buildDir}/wheel-parts.json`, JSON.stringify({ wheelParts }));
 };
 
-const buildWheelPart = async (lang) => {
-  console.log(`Building ${lang} wheel part ...`);
-
+const requireWheelPartBuildExports = async (lang) => {
   if (!(await exists(`${langDir}/${lang}/build.js`))) {
     throw `Cannot find build.js for ${lang} wheel part`;
   }
 
-  const build = require(`./src/langs/${lang}/build`).default;
+  return require(`./src/langs/${lang}/build`);
+};
+
+const buildWheelPart = async (lang) => {
+  console.log(`Building ${lang} wheel part ...`);
+
+  const build = await requireWheelPartBuildExports(lang);
   await build(buildWasmDir);
 };
 
@@ -68,16 +76,29 @@ const buildAllWheelParts = async () => {
   }
 };
 
+const buildWithArgs = async (args) => {
+  for (let arg of args) {
+    if (arg === 'metadata') {
+      await buildMetadata();
+    } else {
+      await createBuildWasmDir();
+      await buildWheelPart(arg);
+    }
+  }
+};
+
+const buildAll = async () => {
+  await buildMetadata();
+  await createBuildWasmDir();
+  await cleanBuildWasmDir();
+  await buildAllWheelParts();
+};
+
 const build = async () => {
   if (process.argv.length > 2) {
-    const wheelPartToBuild = process.argv[2];
-    await buildWheelPart(wheelPartToBuild);
+    await buildWithArgs(process.argv.slice(2));
   } else {
-    await createMetadataFile();
-
-    await createOrCleanBuildWasmDir();
-
-    await buildAllWheelParts();
+    await buildAll();
   }
 };
 

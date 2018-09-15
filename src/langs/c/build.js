@@ -12,9 +12,6 @@ const buildWasm = async (buildDir) => {
   ]);
 };
 
-exports.buildWasm = buildWasm;
-exports.default = async (buildDir) => {
-  buildDir = buildDir || process.env.BUILDDIR;
-  
+module.exports = async (buildDir) => {
   await buildWasm(buildDir);
 };

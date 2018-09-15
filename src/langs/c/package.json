@@ -7,9 +7,6 @@
     "name": "Boyan Mihaylov",
     "url": "https://boyan.io"
   },
-  "scripts": {
-    "build": "node -e \"(require('./build').default)()\""
-  },
   "license": "MIT",
   "repository": {
     "type": "git",

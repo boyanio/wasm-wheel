@@ -28,11 +28,7 @@ const buildLoader = async (buildDir) => {
   await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-assemblyscript.wasm-loader.js`);
 };
 
-exports.buildWasm = buildWasm;
-exports.buildLoader = buildLoader;
-exports.default = async (buildDir) => {
-  buildDir = buildDir || process.env.BUILDDIR;
-  
+module.exports = async (buildDir) => {
   await buildWasm(buildDir);
   await buildLoader(buildDir);
 };
