@@ -1,0 +1,15 @@
+# Build the web app
+FROM node:8-alpine
+
+WORKDIR /app
+COPY . .
+
+RUN npm i npm@latest -g && \
+    npm install
+
+RUN npm run build -- metadata loaders
+
+COPY-WHEEL-PARTS
+
+EXPOSE 8080
+CMD [ "npm", "run", "serve" ]

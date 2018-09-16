@@ -21,11 +21,12 @@ In theory, when compiling each language, the output wasm file should be almost i
 
 ## Getting started
 
-Using Docker is the easiest way to get started. Using Docker multi-stage builds to build each wheel part, the output image becomes around (only) _113MB_.
+Using Docker is the easiest way to get started. With Docker multi-stage builds for building each wheel part, the output image becomes around (only) _113MB_. Each wheel part has a Dockerfile in its folder, so they all need to be combined into one global Dockerfile before building the image.
 
 ```
 $> git clone https://github.com/boyanio/wasm-wheel.git
 $> cd wasm-wheel
+$> npm run build:dockerfile
 $> docker build . -t wasm-wheel
 $> docker run -p 8080:8080 -t wasm-wheel:latest
 ```
