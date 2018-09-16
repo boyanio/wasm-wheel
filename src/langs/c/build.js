@@ -12,6 +12,4 @@ const buildWasm = async (buildDir) => {
   ]);
 };
 
-module.exports = async (buildDir) => {
-  await buildWasm(buildDir);
-};
+exports.buildWasm = buildWasm;

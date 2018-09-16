@@ -22,7 +22,5 @@ const buildLoader = async (buildDir) => {
   await formatWasmLoader(`${__dirname}/konanc-generated.js`, `${buildDir}/wheel-part-kotlin.wasm-loader.js`);
 };
 
-module.exports = async (buildDir) => {
-  await buildWasm(buildDir);
-  await buildLoader(buildDir);
-};
+exports.buildLoader = buildLoader;
+exports.buildWasm = buildWasm;

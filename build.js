@@ -15,14 +15,14 @@ const langDir = `${__dirname}/src/langs`;
 
 const createBuildWasmDir = async () => {
   if (!(await exists(buildWasmDir))) {
-    console.log('Creating the build wasm directory...');
+    console.log('\nCreating the build wasm directory...');
     await mkdir(buildWasmDir);
   }
 };
 
 const cleanBuildWasmDir = async () => {
   if (await exists(buildWasmDir)) {
-    console.log('Cleaning the build wasm directory...');
+    console.log('\nCleaning the build wasm directory...');
 
     const files = await readdir(buildWasmDir);
     for (const file of files) {
@@ -32,7 +32,7 @@ const cleanBuildWasmDir = async () => {
 };
 
 const buildMetadata = async () => {
-  console.log('Creating the metdata file for all wheel parts...');
+  console.log('\nCreating the metdata file for all wheel parts...');
 
   const wheelParts = [];
   const langs = await readdir(langDir);
@@ -61,14 +61,36 @@ const requireWheelPartBuildExports = async (lang) => {
 };
 
 const buildWheelPart = async (lang) => {
-  console.log(`Building ${lang} wheel part ...`);
+  console.log(`\nBuilding ${lang} wheel part ...`);
 
-  const build = await requireWheelPartBuildExports(lang);
-  await build(buildWasmDir);
+  const { buildWasm, buildLoader } = await requireWheelPartBuildExports(lang);
+  await buildWasm(buildWasmDir);
+  if (buildLoader) {
+    await buildLoader(buildWasmDir);
+  }
+};
+
+const buildLoader = async (lang) => {
+  const { buildLoader } = await requireWheelPartBuildExports(lang);
+  if (buildLoader) {
+    console.log(`\nBuilding ${lang} wheel part loader ...`);
+    await buildLoader(buildWasmDir);
+  } else {
+    console.log(`\n${lang} wheel part does not have loader. Skipping`);
+  }
+};
+
+const buildLoaders = async () => {
+  console.log('\nBuilding wheel part loaders...');
+
+  const langs = await readdir(langDir);
+  for (const lang of langs) {
+    await buildLoader(lang);
+  }
 };
 
 const buildAllWheelParts = async () => {
-  console.log('Building all wheel parts...');
+  console.log('\nBuilding all wheel parts...');
 
   const langs = await readdir(langDir);
   for (const lang of langs) {
@@ -78,11 +100,20 @@ const buildAllWheelParts = async () => {
 
 const buildWithArgs = async (args) => {
   for (let arg of args) {
-    if (arg === 'metadata') {
+    switch (arg) {
+    case 'metadata':
       await buildMetadata();
-    } else {
+      break;
+    
+    case 'loaders':
+      await createBuildWasmDir();
+      await buildLoaders();
+      break;
+
+    default:
       await createBuildWasmDir();
       await buildWheelPart(arg);
+      break;
     }
   }
 };

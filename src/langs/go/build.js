@@ -19,7 +19,5 @@ const buildLoader = async (buildDir) => {
   await writeFile(`${buildDir}/wheel-part-go.wasm-loader.js`, wasmLoaderContents, opts);
 };
 
-module.exports = async (buildDir) => {
-  await buildWasm(buildDir);
-  await buildLoader(buildDir);
-};
+exports.buildLoader = buildLoader;
+exports.buildWasm = buildWasm;

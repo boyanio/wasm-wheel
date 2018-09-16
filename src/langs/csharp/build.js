@@ -34,7 +34,5 @@ const buildLoader = async (buildDir) => {
   await copyFile(`${__dirname}/corlib.dll`, `${buildDir}/corlib.dll`);
 };
 
-module.exports = async (buildDir) => {
-  await buildWasm(buildDir);
-  await buildLoader(buildDir);
-};
+exports.buildLoader = buildLoader;
+exports.buildWasm = buildWasm;
