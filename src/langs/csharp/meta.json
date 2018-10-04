@@ -1,4 +1,6 @@
 {
     "name": "C#",
-    "loader": true
+    "loader": {
+        "version": 2
+    }
 }

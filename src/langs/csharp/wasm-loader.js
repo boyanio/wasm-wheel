@@ -1,34 +1,40 @@
-/* global FS, Module */
-(() => {
-  const invokeCSFunc = (assemblyName, namespace, className, methodName, stringArg, returnType) =>
-    Module.ccall(
+/* global DotNetAnywhere */
+(async () => {
+
+  const injectWasmLoader = () => new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    document.body.appendChild(script);
+    script.onload = resolve;
+    script.onerror = reject;
+    script.async = true;
+    script.src = 'wasm/dna.js';
+  });
+
+  let dna = null;
+
+  const invokeCsharpFunc = (assemblyName, namespace, className, methodName, stringArg, returnType) =>
+    dna.ccall(
       'JSInterop_CallDotNet',
       returnType, ['string', 'string', 'string', 'string', 'string'], [assemblyName, namespace, className, methodName, stringArg]);
 
-  window.Module = {
-    wasmBinaryFile: 'wasm/wheel-part-csharp.wasm',
+  const dnaOps = {
+    locateFile: file => `wasm/${file}`,
     arguments: ['wheel-part-csharp.dll'],
     preRun: () => {
-      FS.createPreloadedFile('/', 'corlib.dll', 'wasm/corlib.dll', true);
-      FS.createPreloadedFile('/', 'wheel-part-csharp.dll', 'wasm/wheel-part-csharp.dll', true);
+      dna.FS_createPreloadedFile('/', 'corlib.dll', 'wasm/corlib.dll', true);
+      dna.FS_createPreloadedFile('/', 'wheel-part-csharp.dll', 'wasm/wheel-part-csharp.dll', true);
     },
     postRun: () => {
       const event = new CustomEvent('wheelPartLoaded', {
         detail: {
           name: 'C#',
-          feelingLucky: () => Promise.resolve(invokeCSFunc('wheel-part-csharp', 'WheelOfWasm', 'Program', 'feelingLucky', null, 'number'))
+          feelingLucky: () => Promise.resolve(invokeCsharpFunc('wheel-part-csharp', 'WheelOfWasm', 'Program', 'feelingLucky', null, 'number'))
         }
       });
       document.dispatchEvent(event);
     }
   };
 
-  new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    document.body.appendChild(script);
-    script.onload = resolve;
-    script.onerror = reject;
-    script.async = true;
-    script.src = 'wasm/wheel-part-csharp.js';
-  });
+  await injectWasmLoader();
+  dna = DotNetAnywhere(dnaOps);
 })();

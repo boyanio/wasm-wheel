@@ -29,8 +29,8 @@ const buildWasm = async (buildDir) => {
 
 const buildLoader = async (buildDir) => {
   await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-csharp.wasm-loader.js`);
-  await copyFile(`${__dirname}/dna.js`, `${buildDir}/wheel-part-csharp.js`);
-  await copyFile(`${__dirname}/dna.wasm`, `${buildDir}/wheel-part-csharp.wasm`);
+  await copyFile(`${__dirname}/dna.js`, `${buildDir}/dna.js`);
+  await copyFile(`${__dirname}/dna.wasm`, `${buildDir}/dna.wasm`);
   await copyFile(`${__dirname}/corlib.dll`, `${buildDir}/corlib.dll`);
 };
 

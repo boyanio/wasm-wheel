@@ -53,7 +53,7 @@ Compiled by [webassembly](https://www.npmjs.com/package/webassembly).
 
 #### C#
 
-You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio 2017+ installed on your machine to compile the source. Although, Mono has an [example](http://www.mono-project.com/news/2017/08/09/hello-webassembly/) of compiling C# directly to WebAssembly, the set-up is a bit more complicated. That is why I use Steve Sanderson's example of [DotNetAnywhere](https://github.com/SteveSanderson/Blazor/tree/150aeeb0965bd4b7a24412d239d836016c6b4238) to load a .NET DLL into the browser.
+You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio 2017+ installed on your machine to compile the source. Although Mono has an [example](http://www.mono-project.com/news/2017/08/09/hello-webassembly/) of compiling C# directly to WebAssembly, the set-up is a bit more complicated. That is why I use Steve Sanderson's initial adjustment of [DotNetAnywhere](https://github.com/boyanio/DotNetAnywhere) to interpret .NET into the browser.
 
 #### AssemblyScript
 
