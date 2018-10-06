@@ -1,6 +1,4 @@
 node_modules
 build/wasm/*
 build/wheel-parts.json
-src/langs/java/target
-src/langs/kotlin/target
 /Dockerfile
