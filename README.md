@@ -53,7 +53,7 @@ Compiled by [webassembly](https://www.npmjs.com/package/webassembly).
 
 #### C#
 
-You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio 2017+ installed on your machine to compile the source. Although Mono has an [example](http://www.mono-project.com/news/2017/08/09/hello-webassembly/) of compiling C# directly to WebAssembly, the set-up is a bit more complicated. That is why I use Steve Sanderson's initial adjustment of [DotNetAnywhere](https://github.com/boyanio/DotNetAnywhere) to interpret .NET into the browser.
+You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio 2017+ installed on your machine to compile the source. Although Mono has an [example](http://www.mono-project.com/news/2017/08/09/hello-webassembly/) of compiling C# directly to WebAssembly, the set-up is a bit more complicated. That is why I use Steve Sanderson's initial adjustment of [DotNetAnywhere](https://github.com/boyanio/DotNetAnywhere) to interpret .NET into the browser. You would also need [emscripten](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) >= 1.38.12 to compile DotNetAnywhere's interpretter to WebAssembly.
 
 #### AssemblyScript
 

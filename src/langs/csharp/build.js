@@ -1,10 +1,44 @@
 const fs = require('fs');
+const os = require('os');
 const { promisify } = require('util');
 const execp = require('../../execp');
 
 const copyFile = promisify(fs.copyFile);
+const exists = promisify(fs.exists);
 
-const buildWasm = async (buildDir) => {
+const buildDotNetAnywhereWasm = async (buildDir) => {
+  const nativeDir = `${__dirname}/DotNetAnywhere/native`;
+  const isLinux = os.type() === 'Linux';
+  if (isLinux) {
+    await execp(`chmod +x ${nativeDir}/build.sh`, { cwd: nativeDir });
+    await execp(`${nativeDir}/build.sh`, { cwd: nativeDir });
+  } else {
+    await execp(`${nativeDir}/build.cmd`, { cwd: nativeDir });
+  }
+
+  const outputDir = `${__dirname}/DotNetAnywhere/build`;
+  await copyFile(`${outputDir}/dna.js`, `${buildDir}/dna.js`);
+  await copyFile(`${outputDir}/dna.wasm`, `${buildDir}/dna.wasm`);
+};
+
+const buildDotNetAnywhereCorlib = async (buildDir) => {
+  const csprojDir = `${__dirname}/DotNetAnywhere/corlib`;
+  await execp(`msbuild /t:Restore corlib.csproj`, { cwd: csprojDir });
+  await execp(`msbuild /p:Configuration=Release corlib.csproj`, { cwd: csprojDir });
+  await copyFile(`${csprojDir}/bin/Release/netstandard1.3/corlib.dll`, `${buildDir}/corlib.dll`);
+};
+
+const buildDotNetAnywhere = async (buildDir) => {
+  const dnaDir = `${__dirname}/DotNetAnywhere`;
+  if (!(await exists(dnaDir))) {
+    await execp(`git clone https://github.com/boyanio/DotNetAnywhere.git`, { cwd: __dirname });
+  }
+
+  await buildDotNetAnywhereCorlib(buildDir);
+  await buildDotNetAnywhereWasm(buildDir);
+};
+
+const buildWheelPartDll = async (buildDir) => {
   const detectBuildCmd = async () => {
     const monoCompiler = 'mcs';
     const vsCompiler = 'C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc';
@@ -27,11 +61,13 @@ const buildWasm = async (buildDir) => {
   await execp(cmd);
 };
 
+const buildWasm = async (buildDir) => {
+  await buildDotNetAnywhere(buildDir);
+  await buildWheelPartDll(buildDir);
+};
+
 const buildLoader = async (buildDir) => {
   await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-csharp.wasm-loader.js`);
-  await copyFile(`${__dirname}/dna.js`, `${buildDir}/dna.js`);
-  await copyFile(`${__dirname}/dna.wasm`, `${buildDir}/dna.wasm`);
-  await copyFile(`${__dirname}/corlib.dll`, `${buildDir}/corlib.dll`);
 };
 
 exports.buildLoader = buildLoader;
