@@ -1,4 +1,8 @@
 node_modules
+/Dockerfile
 build/wasm/*
 build/wheel-parts.json
-/Dockerfile
+
+src/langs/csharp/DotNetAnywhere
+src/langs/java/target
+src/langs/kotlin/target

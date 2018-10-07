@@ -23,15 +23,15 @@ const buildDotNetAnywhereWasm = async (buildDir) => {
 
 const buildDotNetAnywhereCorlib = async (buildDir) => {
   const csprojDir = `${__dirname}/DotNetAnywhere/corlib`;
-  await execp(`msbuild /t:Restore corlib.csproj`, { cwd: csprojDir });
-  await execp(`msbuild /p:Configuration=Release corlib.csproj`, { cwd: csprojDir });
+  await execp('msbuild /t:Restore corlib.csproj', { cwd: csprojDir });
+  await execp('msbuild /p:Configuration=Release corlib.csproj', { cwd: csprojDir });
   await copyFile(`${csprojDir}/bin/Release/netstandard1.3/corlib.dll`, `${buildDir}/corlib.dll`);
 };
 
 const buildDotNetAnywhere = async (buildDir) => {
   const dnaDir = `${__dirname}/DotNetAnywhere`;
   if (!(await exists(dnaDir))) {
-    await execp(`git clone https://github.com/boyanio/DotNetAnywhere.git`, { cwd: __dirname });
+    await execp('git clone https://github.com/boyanio/DotNetAnywhere.git', { cwd: __dirname });
   }
 
   await buildDotNetAnywhereCorlib(buildDir);
