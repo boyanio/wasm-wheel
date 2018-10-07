@@ -24,7 +24,7 @@ RUN curl -SL https://github.com/boyanio/DotNetAnywhere/archive/master.tar.gz | t
     chmod +x ./DotNetAnywhere-master/native/build.sh && \
     ./DotNetAnywhere-master/native/build.sh && \
     mkdir ../output && \
-    mv dna.* ../output && \
+    mv ./DotNetAnywhere-master/build/dna.* ../output && \
     rm -rf ./DotNetAnywhere-master
 
 
