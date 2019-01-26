@@ -32,7 +32,7 @@ const cleanBuildWasmDir = async () => {
 };
 
 const buildMetadata = async () => {
-  console.log('\nCreating the metdata file for all wheel parts...');
+  console.log('\nCreating the metadata file for all wheel parts...');
 
   const wheelParts = [];
   const langs = await readdir(langDir);
