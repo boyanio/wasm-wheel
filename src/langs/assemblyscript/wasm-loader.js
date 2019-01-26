@@ -1,5 +1,7 @@
 /* global wheel */
 (() => {
+  const WasmFileVersion = 3;
+
   const getInt = (heap, offset) => {
     return heap[offset] |
       heap[offset + 1] << 8 |
@@ -23,7 +25,10 @@
 
   const readStringFromMemory = (exports, heap) => utf16leToString(heap, exports.name());
   const importObject = {
-    JSMath: Math
+    env: {
+      abort: function() {}
+    },
+    Math: Math
   };
-  wheel.defaultWasmLoader('wheel-part-assemblyscript.wasm?v=2', readStringFromMemory, importObject);
+  wheel.defaultWasmLoader(`wheel-part-assemblyscript.wasm?v=${WasmFileVersion}`, readStringFromMemory, importObject);
 })();
