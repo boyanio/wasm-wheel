@@ -4,12 +4,12 @@ FROM node:8-alpine
 WORKDIR /app
 COPY . .
 
-RUN npm i npm@latest -g && \
-    npm install
-
-RUN npm run build -- metadata loaders
-
+# This will be replaced by the build script
 COPY-WHEEL-PARTS
+
+RUN npm i npm@latest -g && \
+    npm install && \
+    npm run build -- metadata loaders
 
 EXPOSE 8080
 CMD [ "npm", "run", "serve" ]

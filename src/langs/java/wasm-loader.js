@@ -7,7 +7,7 @@
       heap[offset + 3] << 24;
   };
 
-  const javaToJsString = (heap, offset) => {
+  const javaToJavaScriptString = (heap, offset) => {
     // Implementation based on https://stackoverflow.com/questions/31206851/how-much-memory-does-a-string-use-in-java-8 and heap dump analysis
     const charArrayOffset = getInt(heap, offset + 8);
     const charArrayLength = getInt(heap, charArrayOffset + 8);
@@ -15,6 +15,12 @@
     return String.fromCharCode.apply(String, new Uint16Array(heap.buffer, charArrayOffset + 12, charArrayLength));
   };
 
-  const readStringFromMemory = (exports, heap) => javaToJsString(heap, exports.name());
-  wheel.defaultWasmLoader('wheel-part-java.wasm', readStringFromMemory, { teavmMath: Math });
+  const importObject = {
+    teavmMath: Math
+  };
+
+  wheel.loadWheelPart(
+    'wheel-part-java.wasm',
+    javaToJavaScriptString,
+    importObject);
 })();

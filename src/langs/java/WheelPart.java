@@ -10,7 +10,7 @@ public class WheelPart {
     }
 
     @Export(name = "feelingLucky")
-    public static int feelingLucky() {
+    public int feelingLucky() {
     	return (int)(Math.random() * 100) + 1;
     }
 }

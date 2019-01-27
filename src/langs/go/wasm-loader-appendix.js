@@ -1,28 +1,22 @@
-/* globals Go */
+/* globals Go, wheel */
 (async () => {
+  const WasmFileVersion = 2;
+
   const go = new Go();
-  const result = await WebAssembly.instantiateStreaming(fetch('wasm/wheel-part-go.wasm?v=2'), go.importObject);
+  const result = await WebAssembly.instantiateStreaming(fetch(`wasm/wheel-part-go.wasm?v=${WasmFileVersion}`), go.importObject);
 
   window.initGoCallbacks = async (getName, getFeelingLucky) => {
-    const getNamePromise = () => new Promise((resolve) => {
-      getName({
-        result: (n) => { resolve(n); }
-      });
+    const getNamePromise = () => new Promise(resolve => {
+      getName({ result: n => { resolve(n); } });
     });
 
-    const getFeelingLuckyPromise = () => new Promise((resolve) => {
-      getFeelingLucky({
-        result: (n) => { resolve(n); }
-      });
+    const getFeelingLuckyPromise = () => new Promise(resolve => {
+      getFeelingLucky({ result: n => { resolve(n); } });
     });
 
-    const event = new CustomEvent('wheelPartLoaded', {
-      detail: {
-        name: await getNamePromise(),
-        feelingLucky: () => getFeelingLuckyPromise()
-      }
-    });
-    document.dispatchEvent(event);
+    const wheelPartName = await getNamePromise();
+    const feelingLuckyPromiseFunc = () => getFeelingLuckyPromise();
+    wheel.dispatchWheelPartLoadedEvent(wheelPartName, feelingLuckyPromiseFunc);
 
     delete window.initGoCallbacks;
   };

@@ -1,4 +1,4 @@
-/* global DotNetAnywhere */
+/* global DotNetAnywhere, wheel */
 (async () => {
 
   const injectWasmLoader = () => new Promise((resolve, reject) => {
@@ -25,13 +25,9 @@
       dna.FS_createPreloadedFile('/', 'wheel-part-csharp.dll', 'wasm/wheel-part-csharp.dll', true);
     },
     postRun: () => {
-      const event = new CustomEvent('wheelPartLoaded', {
-        detail: {
-          name: 'C#',
-          feelingLucky: () => Promise.resolve(invokeCsharpFunc('wheel-part-csharp', 'WheelOfWasm', 'Program', 'feelingLucky', null, 'number'))
-        }
-      });
-      document.dispatchEvent(event);
+      const feelingLuckyPromiseFunc =
+        () => Promise.resolve(invokeCsharpFunc('wheel-part-csharp', 'WheelOfWasm', 'Program', 'feelingLucky', null, 'number'));
+      wheel.dispatchWheelPartLoadedEvent('C#', feelingLuckyPromiseFunc);
     }
   };
 

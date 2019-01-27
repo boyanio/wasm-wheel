@@ -30,7 +30,7 @@ exports.formatWasmLoader = async (originalWasmLoaderFilePath, outputWasmLoaderFi
   const invokeModuleFuncIndex = modifiedContents.indexOf('function invokeModule(inst, args)');
   modifiedContents = modifiedContents.substring(0, invokeModuleFuncIndex) +
         `
-function emitWheelPartLoadedEvent() {
+function dispatchWheelPartLoadedEvent() {
     const getInt = function(offset) {
         return heap[offset] |
             heap[offset + 1] << 8 |
@@ -44,13 +44,8 @@ function emitWheelPartLoadedEvent() {
         return toUTF16String(ptr + 8 + 4, size * 2);
     };
 
-    const event = new CustomEvent('wheelPartLoaded', {
-        detail: {
-            name: getName(),
-            feelingLucky: () => Promise.resolve(instance.exports["kfun:feelingLucky()ValueType"]())
-        }
-    });
-    document.dispatchEvent(event);
+    const feelingLuckyPromiseFunc = () => Promise.resolve(instance.exports["kfun:feelingLucky()ValueType"]());
+    wheel.dispatchWheelPartLoadedEvent(getName(), feelingLuckyPromiseFunc);
 }
 
 ` +
@@ -59,7 +54,7 @@ function emitWheelPartLoadedEvent() {
   // Call the function on invokeModule
   const invokeModuleFuncReturnIndex = modifiedContents.indexOf('return exit_status;');
   modifiedContents = modifiedContents.substring(0, invokeModuleFuncReturnIndex) +
-        `emitWheelPartLoadedEvent();
+        `dispatchWheelPartLoadedEvent();
   ` +
       modifiedContents.substring(invokeModuleFuncReturnIndex);
 

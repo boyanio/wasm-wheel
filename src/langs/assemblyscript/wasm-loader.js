@@ -23,12 +23,14 @@
     return String.fromCharCode.apply(String, chars);
   };
 
-  const readStringFromMemory = (exports, heap) => utf16leToString(heap, exports.name());
   const importObject = {
     env: {
-      abort: function() {}
+      abort: () => { }
     },
     Math: Math
   };
-  wheel.defaultWasmLoader(`wheel-part-assemblyscript.wasm?v=${WasmFileVersion}`, readStringFromMemory, importObject);
+  wheel.loadWheelPart(
+    `wheel-part-assemblyscript.wasm?v=${WasmFileVersion}`,
+    utf16leToString,
+    importObject);
 })();

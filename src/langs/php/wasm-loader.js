@@ -1,4 +1,4 @@
-/* global PHP */
+/* globals PHP, wheel */
 (async () => {
 
   const PhpFileVersion = 2;
@@ -29,26 +29,21 @@
     ],
     postRun: [
       () => {
-        const event = new CustomEvent('wheelPartLoaded', {
-          detail: {
-            name: 'PHP',
-            feelingLucky: () => {
-              const promiseId = lastPromiseId++;
+        const feelingLuckyPromiseFunc = () => {
+          const promiseId = lastPromiseId++;
 
-              return new Promise((resolve, reject) => {
-                promiseResolvers[promiseId] = resolve;
+          return new Promise((resolve, reject) => {
+            promiseResolvers[promiseId] = resolve;
 
-                const code = `${wheelPartSource}\necho '${promiseId}:'.feelingLucky();\necho PHP_EOL;`;
-                const ret = execPhpCode(code);
-                if (ret !== 0) {
-                  delete promiseResolvers[promiseId];
-                  reject(`The PHP eval function returned ${ret}`);
-                }
-              });
+            const code = `${wheelPartSource}\necho '${promiseId}:'.feelingLucky();\necho PHP_EOL;`;
+            const ret = execPhpCode(code);
+            if (ret !== 0) {
+              delete promiseResolvers[promiseId];
+              reject(`The PHP eval function returned ${ret}`);
             }
-          }
-        });
-        document.dispatchEvent(event);
+          });
+        };
+        wheel.dispatchWheelPartLoadedEvent('PHP', feelingLuckyPromiseFunc);
       }
     ],
     print: function (text) {
