@@ -6,6 +6,8 @@ const execp = require('../../execp');
 const copyFile = promisify(fs.copyFile);
 const exists = promisify(fs.exists);
 
+const pibCommit = 'ada27dc314f37fc7051cff008a7b075dd2057a90';
+
 const buildPib = async (buildDir) => {
 
   const isLinux = os.type() === 'Linux';
@@ -14,7 +16,8 @@ const buildPib = async (buildDir) => {
 
   const pibDir = `${__dirname}/pib`;
   if (!(await exists(pibDir))) {
-    await execp('git clone https://github.com/boyanio/pib.git', { cwd: __dirname });
+    await execp('git clone https://github.com/oraoto/pib.git', { cwd: __dirname });
+    await execp(`git reset --hard ${pibCommit}`, { cwd: pibDir });
   }
   
   await execp('chmod +x build.sh', { cwd: pibDir });

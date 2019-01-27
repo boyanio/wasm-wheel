@@ -1,13 +1,15 @@
 /* global PHP */
 (async () => {
 
+  const PhpFileVersion = 2;
+
   const injectWasmLoader = () => new Promise((resolve, reject) => {
     const script = document.createElement('script');
     document.body.appendChild(script);
     script.onload = resolve;
     script.onerror = reject;
     script.async = true;
-    script.src = 'wasm/php.js';
+    script.src = `wasm/php.js?v=${PhpFileVersion}`;
   });
 
   const wheelPartSource = await fetch('wasm/wheel-part-php.txt').then(r => r.text());

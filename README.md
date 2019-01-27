@@ -18,6 +18,7 @@ In theory, when compiling each language, the output wasm file should be almost i
 - Java
 - Kotlin
 - Go
+- PHP
 
 ## Getting started
 
@@ -81,6 +82,10 @@ As I don't need the `main` function, I tried specifying `-nomain` on the compile
 #### Go
 
 [Go 1.11](https://tip.golang.org/doc/go1.11) adds experimental support for WebAssembly. The communication from JavaScript to Go works with callbacks, which made me change all other calls to use promises. The output file is quite large so far (~ 1.5MB), but this is already being [addressed](https://github.com/golang/go/issues/6853).
+
+#### PHP
+
+The PHP interpreter is [compiled](https://github.com/oraoto/pib/) to WebAssembly and then using the wrapper function `pib_eval` we can evaluate PHP code, which gets printed on the console.
 
 ### Build & Run
 
