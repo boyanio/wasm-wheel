@@ -9,7 +9,7 @@ COPY-WHEEL-PARTS
 
 RUN npm i npm@latest -g && \
     npm install && \
-    npm run build -- metadata loaders
+    npm run build -- loaders metadata
 
 EXPOSE 8080
 CMD [ "npm", "run", "serve" ]
