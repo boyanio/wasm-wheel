@@ -1,9 +1,12 @@
-#include <webassembly.h>
+#include <math.h>
+#include <emscripten.h>
 
-export char * name(void) {
+extern float random(void);
+
+EMSCRIPTEN_KEEPALIVE char * name(void) {
   return "C / C++";
 }
 
-export int feelingLucky(void) {
-  return rand() % 100 + 1;
+EMSCRIPTEN_KEEPALIVE int feelingLucky(void) {
+  return floor(random() * 100) + 1;
 }

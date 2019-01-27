@@ -1,15 +1,16 @@
+const fs = require('fs');
 const { promisify } = require('util');
 const execp = require('../../execp');
 
-const buildWasm = async (buildDir) => {
-  await execp('npm install', { cwd: __dirname });
+const copyFile = promisify(fs.copyFile);
 
-  const compiler = require('webassembly/cli/compiler');
-  const compilerMain = promisify(compiler.main);
-  await compilerMain([
-    '-o', `${buildDir}/wheel-part-c.wasm`,
-    `${__dirname}/wheel-part.c`
-  ]);
+const buildWasm = async (buildDir) => {
+  await execp(`emcc -Os wheel-part.c -o ${buildDir}/wheel-part-c.wasm -s SIDE_MODULE=1`, { cwd: __dirname });
 };
 
+const buildLoader = async (buildDir) => {
+  await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-c.wasm-loader.js`);
+};
+
+exports.buildLoader = buildLoader;
 exports.buildWasm = buildWasm;
