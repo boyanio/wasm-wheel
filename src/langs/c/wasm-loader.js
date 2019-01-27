@@ -12,11 +12,8 @@
 
   const importObject = {
     env: {
-      memoryBase: 0,
+      __memory_base: 0,
       memory: new WebAssembly.Memory({ initial: 256 }),
-      tableBase: 0,
-      table: new WebAssembly.Table({ initial: 4, element: 'anyfunc' }),
-      abort: () => { },
       _random: Math.random
     }
   };
