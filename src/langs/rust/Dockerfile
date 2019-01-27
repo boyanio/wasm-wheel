@@ -1,4 +1,4 @@
-FROM rust:1.29.0 AS wheel-part-rust
+FROM rust:1.32 AS wheel-part-rust
 
 WORKDIR /work
 COPY src/langs/rust .

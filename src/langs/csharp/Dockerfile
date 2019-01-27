@@ -1,20 +1,20 @@
+# Compile DotNetAnywhere's corlib and the wheel part to CIL (.dll)
 FROM mono:5.14 AS wheel-part-csharp-mono
 
 WORKDIR /work
 
 COPY src/langs/csharp .
 
-RUN curl -SL https://github.com/boyanio/DotNetAnywhere/archive/master.tar.gz | tar xz
-
-RUN mkdir ../output && \
+RUN curl -SL https://github.com/boyanio/DotNetAnywhere/archive/master.tar.gz | tar xz && \
+    mkdir ../output && \
     mcs -target:library -out:../output/wheel-part-csharp.dll wheel-part.cs && \
     msbuild /t:Restore ./DotNetAnywhere-master/corlib/corlib.csproj && \
     msbuild /p:Configuration=Release ./DotNetAnywhere-master/corlib/corlib.csproj && \
     cp ./DotNetAnywhere-master/corlib/bin/Release/netstandard1.3/corlib.dll ../output && \
     rm -rf ./DotNetAnywhere-master
 
-
-FROM trzeci/emscripten:sdk-tag-1.38.12-64bit AS wheel-part-csharp-wasm
+# Compile DotNetAnywhere to WebAssembly
+FROM trzeci/emscripten:sdk-tag-1.38.25-64bit AS wheel-part-csharp-wasm
 
 WORKDIR /work
 
