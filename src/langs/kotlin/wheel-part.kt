@@ -4,12 +4,12 @@ import kotlinx.wasm.jsinterop.ReturnSlot_getDouble;
 fun main(args: Array<String>) {
 }
 
-@Used
+@Retain
 public fun name(): String {
   return "Kotlin"
 }
 
-@Used
+@Retain
 public fun feelingLucky(): Int {
   // When returning a double from JavaScript, it is put in a global
   // storage as two parts (lower & upper). The way to access this double,

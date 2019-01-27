@@ -4,6 +4,8 @@ const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
+const WasmFileVersion = 4;
+
 const addTabs = (text) =>
   text.split(/\r?\n/).map(line => `  ${line}`).join('\r\n');
 
@@ -18,11 +20,11 @@ exports.formatWasmLoader = async (originalWasmLoaderFilePath, outputWasmLoaderFi
   // with a simpler version, where it is not necessary to create a <script>
   // element, but rather load the wasm file right away
   modifiedContents = modifiedContents.substring(0, modifiedContents.indexOf('if (!document.currentScript.hasAttribute("wasm")) {')) +
-      modifiedContents.substring(modifiedContents.indexOf('var filename = document.currentScript.getAttribute("wasm");'));
+      modifiedContents.substring(modifiedContents.indexOf('const filename = document.currentScript.getAttribute("wasm");'));
 
   modifiedContents = modifiedContents.replace(
-    'var filename = document.currentScript.getAttribute("wasm");',
-    'var filename = "wasm/wheel-part-kotlin.wasm?v=3";');
+    'const filename = document.currentScript.getAttribute("wasm");',
+    `const filename = "wasm/wheel-part-kotlin.wasm?v=${WasmFileVersion}";`);
 
   // Inject a function to emit a event when the wheel part has been loaded
   const invokeModuleFuncIndex = modifiedContents.indexOf('function invokeModule(inst, args)');
@@ -37,7 +39,7 @@ function emitWheelPartLoadedEvent() {
     };
 
     const getName = function() {
-        const ptr = instance.exports["'kfun:name$$kotlin.String'"]();
+        const ptr = instance.exports["kfun:name()kotlin.String"]();
         const size = getInt(ptr + 8);
         return toUTF16String(ptr + 8 + 4, size * 2);
     };
@@ -45,7 +47,7 @@ function emitWheelPartLoadedEvent() {
     const event = new CustomEvent('wheelPartLoaded', {
         detail: {
             name: getName(),
-            feelingLucky: () => Promise.resolve(instance.exports["'kfun:feelingLucky$$ValueType'"]())
+            feelingLucky: () => Promise.resolve(instance.exports["kfun:feelingLucky()ValueType"]())
         }
     });
     document.dispatchEvent(event);
@@ -62,16 +64,14 @@ function emitWheelPartLoadedEvent() {
       modifiedContents.substring(invokeModuleFuncReturnIndex);
 
   // Register custom wasm imports
-  const customImportsIndex = modifiedContents.indexOf('function linkJavaScriptLibraries() {');
-  modifiedContents = modifiedContents.substring(0, customImportsIndex) +
-        `
-konan_dependencies.env.Konan_js_rand = function() {
-    const result = Math.random();
-    doubleToReturnSlot(result);
-};
-
-` +
-      modifiedContents.substring(customImportsIndex);
+  const dateNowDependencyIndex = modifiedContents.indexOf('Konan_date_now: function (pointer) {');
+  modifiedContents = modifiedContents.substring(0, dateNowDependencyIndex) +
+        `Konan_js_rand: function () {
+            const result = Math.random();
+            doubleToReturnSlot(result);
+        },
+        ` +
+      modifiedContents.substring(dateNowDependencyIndex);
 
   // Surround the whole file with a function scope to prevent messing with the
   // global scope
