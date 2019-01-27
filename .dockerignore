@@ -6,5 +6,8 @@ build/wasm/*
 build/wheel-parts.json
 src/langs/java/target
 src/langs/kotlin/target
+src/langs/php/pib
+src/langs/csharp/DotNetAnywhere
+tmp
 **/*.md
 LICENSE
