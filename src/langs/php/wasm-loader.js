@@ -22,11 +22,6 @@
 
   const phpOpts = {
     locateFile: file => `wasm/${file}`,
-    preRun: [
-      () => {
-        php.asmLibraryArg._putenv('USE_ZEND_ALLOC=0');
-      }
-    ],
     postRun: [
       () => {
         const feelingLuckyPromiseFunc = () => {
