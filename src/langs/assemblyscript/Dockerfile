@@ -11,7 +11,5 @@ RUN mkdir ../output && \
         --baseDir ./ \
         --binaryFile ../output/wheel-part-assemblyscript.wasm \
         --importMemory \
-        --optimize \
-        --measure \
         --validate \
-        --use 'Math=JSMath'
+        -O3z

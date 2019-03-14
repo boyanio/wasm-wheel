@@ -1,7 +1,10 @@
+@external("env", "random")
+declare function random(): f64;
+
 export function name(): string {
   return "AssemblyScript";
 }
 
-export function feelingLucky(): number {
-  return Math.floor(Math.random() * 100) + 1;
+export function feelingLucky(): f64 {
+  return Math.floor(random() * 100) + 1;
 }
