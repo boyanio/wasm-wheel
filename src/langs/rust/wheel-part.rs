@@ -23,12 +23,12 @@ fn floor(x: f64) -> f64 {
 
 #[no_mangle]
 pub fn name() -> *const u8 {
-	let n = b"Rust\0";
-	n as *const u8
+  let n = b"Rust\0";
+  n as *const u8
 }
 
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn feelingLucky() -> f64 {
-	unsafe { floor(random() * 100.0) + 1.0 }
+  unsafe { floor(random() * 100.0) + 1.0 }
 }
