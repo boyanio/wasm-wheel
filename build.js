@@ -17,14 +17,14 @@ const generateFileHash = (filePath) => {
   return new Promise(resolve => {
     const hash = crypto.createHash('sha1');
     hash.setEncoding('hex');
-    
+
     const fileStream = fs.createReadStream(filePath);
 
     fileStream.on('end', () => {
       hash.end();
       resolve(hash.read().substring(0, 10));
     });
-    
+
     // read all file and pipe it (write it) to the hash object
     fileStream.pipe(hash);
   });
@@ -80,7 +80,7 @@ const buildWheelPart = async (lang) => {
 
 const buildLoader = async (lang) => {
   console.log(`\nBuilding ${lang} wheel part loader ...`);
-  
+
   const { buildLoader } = await requireWheelPartBuildExports(lang);
   await buildLoader(buildWasmDir);
 };
@@ -109,14 +109,12 @@ const buildWithArgs = async (args) => {
     case 'metadata':
       await buildMetadata();
       break;
-    
+
     case 'loaders':
-      await createBuildWasmDir();
       await buildLoaders();
       break;
 
     default:
-      await createBuildWasmDir();
       await buildWheelPart(arg);
       break;
     }
@@ -131,6 +129,7 @@ const buildAll = async () => {
 };
 
 const build = async () => {
+  await createBuildWasmDir();
   if (process.argv.length > 2) {
     await buildWithArgs(process.argv.slice(2));
   } else {
