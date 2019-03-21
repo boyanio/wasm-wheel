@@ -12,7 +12,7 @@ const buildLoader = async (buildDir) => {
   await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-rust.wasm-loader.js`);
 };
 
-exports = {
+module.exports = {
   buildLoader,
   buildWasm
 };
