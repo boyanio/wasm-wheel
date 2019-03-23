@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "connect": "^3.6.5",
-    "eslint": "^5.5.0",
+    "eslint": "^5.15.3",
     "serve-static": "^1.13.1"
   }
 }
