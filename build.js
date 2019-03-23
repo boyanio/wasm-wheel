@@ -122,10 +122,9 @@ const buildWithArgs = async (args) => {
 };
 
 const buildAll = async () => {
-  await buildMetadata();
-  await createBuildWasmDir();
   await cleanBuildWasmDir();
   await buildAllWheelParts();
+  await buildMetadata();
 };
 
 const build = async () => {
