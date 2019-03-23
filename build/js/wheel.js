@@ -10,7 +10,7 @@
 
   const getCoordOnCircle = (r, angleInRad, ref) => ({
     x: ref.cx + r * Math.cos(angleInRad),
-    y: ref.cycy + r * Math.sin(angleInRad)
+    y: ref.cy + r * Math.sin(angleInRad)
   });
 
   const wheelFactory = mountElem => {
