@@ -9,6 +9,8 @@ The _Wheel of WebAssembly_ is a project aiming to show the diversity of language
 
 In theory, when compiling each language, the output wasm file should be almost identical. In practice, this is not the case. As many of the compilers are still very experimental, these two functions cannot be definen in all the languages. Some have issues with generating a random number, so I import JavaSript's `Math.random()` to help them. Others cannot handle strings properly. WebAssembly defines only numeric types and strings are suppsed to be put in the linear memory and accessed via a pointer from JavaScript.
 
+![Wheel of WebAssembly screenShot](/assets/wasm-wheel-screenshot.jpg)
+
 ## Supported languages
 
 - C / C++
