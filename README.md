@@ -41,7 +41,7 @@ The basic requirement to set up the repository is Node.js. I have tested with ve
 ```
 $> git clone https://github.com/boyanio/wasm-wheel.git
 $> cd wasm-wheel
-$> npm install
+$> npm i
 ```
 
 Furthermore, each language has additional requirements.
@@ -94,8 +94,7 @@ The PHP interpreter is [compiled](https://github.com/oraoto/pib/) to WebAssembly
 The following command will compile all sources to WASM and set up a HTTP server on port 8080. You can then access the site on `http://localhost:8080`.
 
 ```
-$> npm run build
-$> npm run serve
+$> npm start
 ```
 
 You can re-build individual wheel parts by running the following command:
