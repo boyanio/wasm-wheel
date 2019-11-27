@@ -64,7 +64,7 @@ You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio
 
 #### Rust
 
-You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to add the wasm32 target.
+You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to add the wasm32 target. Tested with `rustc 1.39.0 (4560ea788 2019-11-04)`.
 
 ```
 $> rustup update

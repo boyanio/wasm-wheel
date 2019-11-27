@@ -1,6 +1,6 @@
 /* globals wheel */
 (() => {
-  const WasmFileVersion = 1;
+  const WasmFileVersion = 2;
 
   const utf8ToString = (heap, offset) => {
     let s = '';
