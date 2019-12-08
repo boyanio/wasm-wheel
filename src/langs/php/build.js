@@ -16,7 +16,7 @@ const buildPib = async (buildDir) => {
 
   const pibDir = `${__dirname}/pib`;
   if (!(await exists(pibDir))) {
-    await execp('git clone https://github.com/oraoto/pib.git', { cwd: __dirname });
+    await execp('git clone --branch master --single-branch --no-tags https://github.com/oraoto/pib.git', { cwd: __dirname });
     await execp(`git reset --hard ${pibCommit}`, { cwd: pibDir });
   }
   
