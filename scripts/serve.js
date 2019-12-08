@@ -1,8 +1,10 @@
 const connect = require('connect');
 const serveStatic = require('serve-static');
+const path = require('path');
 
 const port = process.argv.length > 2 ? parseInt(process.argv[2], 10) : 8080;
-const buildDir = `${__dirname}/build`;
+const rootDir = path.resolve(__dirname, '../');
+const buildDir = path.resolve(rootDir, 'build');
 
 const setContentType = (response, path) => {
   const ext = path.split('.').pop().toLowerCase();
@@ -27,9 +29,8 @@ const setContentType = (response, path) => {
   }
 };
 
-const setHeaders = (response, path) => {
+const setHeaders = (response, path) =>
   setContentType(response, path);
-};
 
 console.log(`Serving HTTP on http://localhost:${port} ...`);
 connect()

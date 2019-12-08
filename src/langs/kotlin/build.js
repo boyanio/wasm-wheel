@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { promisify } = require('util');
-const execp = require('../../execp');
+const execp = require('../../../scripts/execp');
 const { formatWasmLoader } = require('./format-wasm-loader');
 
 const exists = promisify(fs.exists);

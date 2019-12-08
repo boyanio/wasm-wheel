@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const { promisify } = require('util');
-const execp = require('../../execp');
+const execp = require('../../../scripts/execp');
 
 const copyFile = promisify(fs.copyFile);
 const exists = promisify(fs.exists);

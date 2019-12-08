@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
-const { createHash } = require('./scripts/createHash');
+const { createHash } = require('./createHash');
 
 const readdir = promisify(fs.readdir);
 const writeFile = promisify(fs.writeFile);
@@ -9,9 +9,9 @@ const exists = promisify(fs.exists);
 const unlink = promisify(fs.unlink);
 const mkdir = promisify(fs.mkdir);
 
-const buildDir = `${__dirname}/build`;
-const buildWasmDir = `${buildDir}/wasm`;
-const langDir = `${__dirname}/src/langs`;
+const rootDir = path.resolve(__dirname, '../');
+const buildWasmDir = path.resolve(rootDir, 'build/wasm');
+const langDir = path.resolve(rootDir, 'src/langs');
 
 const createBuildWasmDir = async () => {
   if (!(await exists(buildWasmDir))) {
@@ -37,19 +37,22 @@ const buildMetadata = async () => {
   const fileHashMap = {};
   const buildWasmFiles = await readdir(buildWasmDir);
   for (const file of buildWasmFiles) {
-    const fileHash = await createHash(`${buildWasmDir}/${file}`);
+    const fileHash = await createHash(path.resolve(buildWasmDir, file));
     fileHashMap[file] = fileHash;
   }
 
-  await writeFile(`${buildWasmDir}/metadata.json`, JSON.stringify({ fileHashMap }, null, 2));
+  await writeFile(
+    path.resolve(buildWasmDir, 'metadata.json'),
+    JSON.stringify({ fileHashMap }, null, 2));
 };
 
 const requireWheelPartBuildExports = async (lang) => {
-  if (!(await exists(`${langDir}/${lang}/build.js`))) {
-    throw `Cannot find build.js for ${lang} wheel part`;
+  const buildFile = path.resolve(langDir, `${lang}/build.js`);
+  if (!(await exists(buildFile))) {
+    throw `Cannot find build file for ${lang} wheel part at '${buildFile}'`;
   }
 
-  return require(`./src/langs/${lang}/build`);
+  return require(buildFile);
 };
 
 const buildWheelPart = async (lang) => {

@@ -8,9 +8,9 @@
     "url": "https://boyan.io"
   },
   "scripts": {
-    "build": "node build.js",
-    "build:dockerfile": "node dockerfile.js",
-    "serve": "node serve.js",
+    "build": "node scripts/build.js",
+    "build:dockerfile": "node scripts/dockerfile.js",
+    "serve": "node scripts/serve.js",
     "lint": "node_modules/.bin/eslint . --ignore-path .gitignore",
     "start": "npm run build && npm run serve"
   },

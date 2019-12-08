@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { promisify } = require('util');
-const execp = require('../../execp');
+const execp = require('../../../scripts/execp');
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
