@@ -1,7 +1,5 @@
 /* globals wheel */
 (() => {
-  const WasmFileVersion = 2;
-
   const utf8ToString = (heap, offset) => {
     let s = '';
     for (let i = offset; heap[i]; i++) {
@@ -19,7 +17,7 @@
   };
 
   wheel.loadWheelPart(
-    `wheel-part-c.wasm?v=${WasmFileVersion}`,
+    'wheel-part-c.wasm',
     utf8ToString,
     importObject,
     { name: '_name', feelingLucky: '_feelingLucky' });

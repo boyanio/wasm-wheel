@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
-const crypto = require('crypto');
+const { createHash } = require('./scripts/createHash');
 
 const readdir = promisify(fs.readdir);
 const writeFile = promisify(fs.writeFile);
@@ -12,23 +12,6 @@ const mkdir = promisify(fs.mkdir);
 const buildDir = `${__dirname}/build`;
 const buildWasmDir = `${buildDir}/wasm`;
 const langDir = `${__dirname}/src/langs`;
-
-const generateFileHash = (filePath) => {
-  return new Promise(resolve => {
-    const hash = crypto.createHash('sha1');
-    hash.setEncoding('hex');
-
-    const fileStream = fs.createReadStream(filePath);
-
-    fileStream.on('end', () => {
-      hash.end();
-      resolve(hash.read().substring(0, 10));
-    });
-
-    // read all file and pipe it (write it) to the hash object
-    fileStream.pipe(hash);
-  });
-};
 
 const createBuildWasmDir = async () => {
   if (!(await exists(buildWasmDir))) {
@@ -51,15 +34,14 @@ const cleanBuildWasmDir = async () => {
 const buildMetadata = async () => {
   console.log('\nCreating the metadata file for all wheel parts...');
 
-  const loaders = [];
-  const langs = await readdir(langDir);
-  for (const lang of langs) {
-    const loaderWebPath = `wasm/wheel-part-${lang}.wasm-loader.js`;
-    const loaderHash = await generateFileHash(`build/${loaderWebPath}`);
-    loaders.push(`${loaderWebPath}?v=${loaderHash}`);
+  const fileHashMap = {};
+  const buildWasmFiles = await readdir(buildWasmDir);
+  for (const file of buildWasmFiles) {
+    const fileHash = await createHash(`${buildWasmDir}/${file}`);
+    fileHashMap[file] = fileHash;
   }
 
-  await writeFile(`${buildDir}/wheel-parts.json`, JSON.stringify({ loaders }));
+  await writeFile(`${buildWasmDir}/metadata.json`, JSON.stringify({ fileHashMap }, null, 2));
 };
 
 const requireWheelPartBuildExports = async (lang) => {

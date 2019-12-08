@@ -7,7 +7,7 @@
     script.onload = resolve;
     script.onerror = reject;
     script.async = true;
-    script.src = 'wasm/dna.js';
+    script.src = wheel.resolveFilePath('dna.js');
   });
 
   let dna = null;
@@ -18,7 +18,7 @@
       returnType, ['string', 'string', 'string', 'string', 'string'], [assemblyName, namespace, className, methodName, stringArg]);
 
   const dnaOps = {
-    locateFile: file => `wasm/${file}`,
+    locateFile: file => wheel.resolveFilePath(file),
     arguments: ['wheel-part-csharp.dll'],
     preRun: () => {
       dna.FS_createPreloadedFile('/', 'corlib.dll', 'wasm/corlib.dll', true);

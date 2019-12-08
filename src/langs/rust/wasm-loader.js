@@ -1,7 +1,5 @@
 /* globals wheel */
 (() => {
-  const WasmFileVersion = 2;
-
   const utf8ToString = (heap, offset) => {
     let s = '';
     for (let i = offset; heap[i]; i++) {
@@ -17,7 +15,7 @@
   };
 
   wheel.loadWheelPart(
-    `wheel-part-rust.wasm?v=${WasmFileVersion}`,
+    'wheel-part-rust.wasm',
     utf8ToString,
     importObject);
 })();

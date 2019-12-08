@@ -1,7 +1,5 @@
 /* global wheel */
 (() => {
-  const WasmFileVersion = 3;
-
   const getInt = (heap, offset) => {
     return (
       heap[offset + 0] <<  0 |
@@ -31,9 +29,5 @@
     },
   };
 
-  wheel.loadWheelPart(
-    `wheel-part-assemblyscript.wasm?v=${WasmFileVersion}`,
-    utf16leToString,
-    importObject
-  );
+  wheel.loadWheelPart('wheel-part-assemblyscript.wasm', utf16leToString, importObject);
 })();

@@ -4,8 +4,6 @@ const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-const WasmFileVersion = 4;
-
 const addTabs = (text) =>
   text.split(/\r?\n/).map(line => `  ${line}`).join('\r\n');
 
@@ -24,7 +22,7 @@ exports.formatWasmLoader = async (originalWasmLoaderFilePath, outputWasmLoaderFi
 
   modifiedContents = modifiedContents.replace(
     'const filename = document.currentScript.getAttribute("wasm");',
-    `const filename = "wasm/wheel-part-kotlin.wasm?v=${WasmFileVersion}";`);
+    'const filename = wheel.resolveFilePath("wheel-part-kotlin.wasm");');
 
   // Inject a function to emit a event when the wheel part has been loaded
   const invokeModuleFuncIndex = modifiedContents.indexOf('function invokeModule(inst, args)');

@@ -1,9 +1,8 @@
 /* globals Go, wheel */
 (async () => {
-  const WasmFileVersion = 2;
-
   const go = new Go();
-  const result = await WebAssembly.instantiateStreaming(fetch(`wasm/wheel-part-go.wasm?v=${WasmFileVersion}`), go.importObject);
+  const wasmFileName = wheel.resolveFilePath('wheel-part-go.wasm');
+  const result = await WebAssembly.instantiateStreaming(fetch(wasmFileName), go.importObject);
 
   window.initGoCallbacks = async (getName, getFeelingLucky) => {
     const getNamePromise = () => new Promise(resolve => {

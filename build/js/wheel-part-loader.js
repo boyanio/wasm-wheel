@@ -9,9 +9,11 @@
     };
   }
 
-  const instantiateWasmFile = async (wasmFileName, importObject) => {
+  let resolveFilePath = file => `wasm/${file}`;
+
+  const instantiateWasmFile = async (wasmFile, importObject) => {
     try {
-      const { instance } = await WebAssembly.instantiateStreaming(fetch(`wasm/${wasmFileName}`), importObject);
+      const { instance } = await WebAssembly.instantiateStreaming(fetch(wasmFile), importObject);
       
       // https://github.com/WebAssembly/tool-conventions/blob/master/DynamicLinking.md
       const postInstantiate = instance.exports['__post_instantiate'];
@@ -21,7 +23,7 @@
 
       return instance;
     } catch (err) {
-      console.error(`Error instantiating ${wasmFileName}. ${err}`);
+      console.error(`Error instantiating ${wasmFile}. ${err}`);
     }
   };
 
@@ -43,7 +45,8 @@
     
     const importObjectEnv = importObject.env || (importObject.env = {});
     const memory = importObjectEnv.memory || (importObjectEnv.memory = new WebAssembly.Memory({ initial: 2, maximum: 10 }));
-    const wasmInstance = await instantiateWasmFile(wasmFileName, importObject);
+    const wasmFile = resolveFilePath(wasmFileName);
+    const wasmInstance = await instantiateWasmFile(wasmFile, importObject);
 
     const heap = new Uint8Array((wasmInstance.exports.memory || memory).buffer);
     const namePtr = wasmInstance.exports[exportedNames.name]();
@@ -65,15 +68,20 @@
     });
   };
 
-  const loadWheelParts = async () => {
-    const wheelParts = await fetch(`wheel-parts.json?v=${new Date().getTime()}`).then(r => r.json());
-    wheelParts.loaders.forEach(loader => {
-      setupWheelPartLoader(loader);
-    });
+  const init = async () => {
+    const { fileHashMap } = await fetch(`wasm/metadata.json?v=${new Date().getTime()}`)
+      .then(x => x.json());
+
+    resolveFilePath = file => `wasm/${file}?v=${fileHashMap[file]}`;
+    wheel.resolveFilePath = resolveFilePath;
+    
+    Object.keys(fileHashMap)
+      .filter(file => file.endsWith('wasm-loader.js'))
+      .forEach(file => setupWheelPartLoader(`wasm/${file}?v=${fileHashMap[file]}`));
   };
 
   wheel.dispatchWheelPartLoadedEvent = dispatchWheelPartLoadedEvent;
   wheel.loadWheelPart = loadWheelPart;
 
-  loadWheelParts();
+  init();
 })();
