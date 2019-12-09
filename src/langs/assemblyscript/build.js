@@ -16,6 +16,7 @@ const buildWasm = async (buildDir) => {
     '--binaryFile', 'output.wasm',
     '--validate',
     '--importMemory',
+    '--runtime', 'none',
     '-O3z'
   ]);
 
