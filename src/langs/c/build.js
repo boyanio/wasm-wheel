@@ -5,7 +5,7 @@ const execp = require('../../../scripts/execp');
 const copyFile = promisify(fs.copyFile);
 
 const buildWasm = async (buildDir) => {
-  await execp(`emcc -Os wheel-part.c -o ${buildDir}/wheel-part-c.wasm -s SIDE_MODULE=1`, { cwd: __dirname });
+  await execp(`emcc -Os wheel-part.c -s EXPORTED_FUNCTIONS="['_name','_feelingLucky']" -s ERROR_ON_UNDEFINED_SYMBOLS=0 -o ${buildDir}/wheel-part-c.wasm`, { cwd: __dirname });
 };
 
 const buildLoader = async (buildDir) => {

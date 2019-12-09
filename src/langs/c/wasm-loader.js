@@ -10,15 +10,17 @@
 
   const importObject = {
     env: {
-      __memory_base: 0,
-      memory: new WebAssembly.Memory({ initial: 256 }),
-      _random: Math.random
+      jsrandom: Math.random
     }
   };
+
+  const onWasmInstantiaated = instance =>
+    instance.exports._start();
 
   wheel.loadWheelPart(
     'wheel-part-c.wasm',
     utf8ToString,
     importObject,
-    { name: '_name', feelingLucky: '_feelingLucky' });
+    { name: 'name', feelingLucky: 'feelingLucky' },
+    onWasmInstantiaated);
 })();

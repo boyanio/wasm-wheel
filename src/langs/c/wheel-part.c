@@ -1,12 +1,11 @@
 #include <math.h>
-#include <emscripten.h>
 
-extern float random(void);
+extern float jsrandom(void);
 
-EMSCRIPTEN_KEEPALIVE char * name(void) {
+char * name(void) {
   return "C / C++";
 }
 
-EMSCRIPTEN_KEEPALIVE int feelingLucky(void) {
-  return floor(random() * 100) + 1;
+int feelingLucky(void) {
+  return floor(jsrandom() * 100) + 1;
 }

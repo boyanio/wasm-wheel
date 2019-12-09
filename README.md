@@ -52,7 +52,7 @@ Each wheel part represents a language that can be compiled to WebAssembly. My in
 
 #### C / C++
 
-Compiled by [webassembly](https://www.npmjs.com/package/webassembly).
+Compiled by [emscripten](https://emscripten.org). Currently using emcc `1.39.4`.
 
 #### C#
 

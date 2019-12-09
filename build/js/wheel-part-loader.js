@@ -14,13 +14,6 @@
   const instantiateWasmFile = async (wasmFile, importObject) => {
     try {
       const { instance } = await WebAssembly.instantiateStreaming(fetch(wasmFile), importObject);
-      
-      // https://github.com/WebAssembly/tool-conventions/blob/master/DynamicLinking.md
-      const postInstantiate = instance.exports['__post_instantiate'];
-      if (postInstantiate) {
-        postInstantiate();
-      }
-
       return instance;
     } catch (err) {
       console.error(`Error instantiating ${wasmFile}. ${err}`);
@@ -41,14 +34,22 @@
     wasmFileName,
     readStringFromMemory,
     importObject = {},
-    exportedNames = { name: 'name', feelingLucky: 'feelingLucky' }) => {
+    exportedNames = { name: 'name', feelingLucky: 'feelingLucky' },
+    onWasmInstantiaated) => {
     
-    const importObjectEnv = importObject.env || (importObject.env = {});
-    const memory = importObjectEnv.memory || (importObjectEnv.memory = new WebAssembly.Memory({ initial: 2, maximum: 10 }));
     const wasmFile = resolveFilePath(wasmFileName);
     const wasmInstance = await instantiateWasmFile(wasmFile, importObject);
 
-    const heap = new Uint8Array((wasmInstance.exports.memory || memory).buffer);
+    if (onWasmInstantiaated) {
+      onWasmInstantiaated(wasmInstance);
+    }
+
+    const memory = wasmInstance.exports.memory || (importObject.env || {}).memory;
+    if (!memory) {
+      throw new Error(`${wasmFileName} must either require import of memory (env.memory) er export its own memory`);
+    }
+
+    const heap = new Uint8Array(memory.buffer);
     const namePtr = wasmInstance.exports[exportedNames.name]();
     const wheelPartName = readStringFromMemory(heap, namePtr);
 
