@@ -60,7 +60,7 @@ You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio
 
 #### AssemblyScript
 
-[AssemblyScript](https://www.npmjs.com/package/assemblyscript) defines a subset of TypeScript that it compiles to WebAssembly.
+[AssemblyScript](https://www.npmjs.com/package/assemblyscript) defines a subset of TypeScript that can be compiled to WebAssembly. Currently using version `0.8.1` of the compiler.
 
 #### Rust
 

@@ -4,12 +4,13 @@ WORKDIR /work
 COPY src/langs/assemblyscript .
 
 RUN npm i npm@latest -g && \
-    npm install
+        npm ci
 
 RUN mkdir ../output && \
-    node_modules/.bin/asc wheel-part.ts \
+        node_modules/.bin/asc wheel-part.ts \
         --baseDir ./ \
         --binaryFile ../output/wheel-part-assemblyscript.wasm \
         --importMemory \
         --validate \
+        --runtime none \
         -O3z

@@ -13,6 +13,7 @@
     "url": "https://github.com/boyanio/wasm-wheel.git"
   },
   "devDependencies": {
-    "assemblyscript": "^0.8.1"
+    "assemblyscript": "^0.8.1",
+    "typescript": "^3.7.3"
   }
 }

@@ -9,8 +9,8 @@
 
   const importObject = {
     env: {
-      abort: console.error,
-      random: Math.random
+      random: Math.random,
+      memory: new WebAssembly.Memory({ initial: 1, maximum: 5 })
     },
   };
 

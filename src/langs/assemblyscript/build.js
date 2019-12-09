@@ -6,7 +6,7 @@ const copyFile = promisify(fs.copyFile);
 const rename   = promisify(fs.rename);
 
 const buildWasm = async (buildDir) => {
-  await execp('npm install', { cwd: __dirname });
+  await execp('npm ci', { cwd: __dirname });
 
   const asc = require('assemblyscript/bin/asc');
   const ascMain = promisify(asc.main);
