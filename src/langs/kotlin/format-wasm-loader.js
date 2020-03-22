@@ -38,11 +38,11 @@ function dispatchWheelPartLoadedEvent() {
 
     const getName = function() {
         const ptr = instance.exports["kfun:name()kotlin.String"]();
-        const size = getInt(ptr + 8);
-        return toUTF16String(ptr + 8 + 4, size * 2);
+        const size = getInt(ptr + 4);
+        return toUTF16String(ptr + 4 + 4, size * 2);
     };
 
-    const feelingLuckyPromiseFunc = () => Promise.resolve(instance.exports["kfun:feelingLucky()ValueType"]());
+    const feelingLuckyPromiseFunc = () => Promise.resolve(instance.exports["kfun:feelingLucky()kotlin.Int"]());
     wheel.dispatchWheelPartLoadedEvent(getName(), feelingLuckyPromiseFunc);
 }
 

@@ -3,7 +3,7 @@ FROM openjdk:8-jdk AS wheel-part-kotlin
 WORKDIR /work
 COPY src/langs/kotlin .
 
-ENV KOTLIN_NATIVE_VERSION="0.9.3"
+ENV KOTLIN_NATIVE_VERSION="1.3.70"
 
 RUN apt-get update && \
     apt-get install -y ca-certificates wget && \

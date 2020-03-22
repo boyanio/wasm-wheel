@@ -6,18 +6,19 @@ const execp = require('../../../scripts/execp');
 const copyFile = promisify(fs.copyFile);
 const exists = promisify(fs.exists);
 
-const pibCommit = 'ada27dc314f37fc7051cff008a7b075dd2057a90';
+const pibRepoUrl = 'https://github.com/oraoto/pib.git';
+const pibCommitId = '7d4368235c0cda437ee47cbd389d7c11e179a371';
 
 const buildPib = async (buildDir) => {
 
   const isLinux = os.type() === 'Linux';
   if (!isLinux)
-    throw 'Building the PIB on Windows is not supported for now. Use the Docker build instead';
+    throw 'Building PIB on Windows is not supported for now. Use the Docker build instead';
 
   const pibDir = `${__dirname}/pib`;
   if (!(await exists(pibDir))) {
-    await execp('git clone --branch master --single-branch --no-tags https://github.com/oraoto/pib.git', { cwd: __dirname });
-    await execp(`git reset --hard ${pibCommit}`, { cwd: pibDir });
+    await execp(`git clone --branch master --single-branch --no-tags ${pibRepoUrl}`, { cwd: __dirname });
+    await execp(`git reset --hard ${pibCommitId}`, { cwd: pibDir });
   }
   
   await execp('chmod +x build.sh', { cwd: pibDir });

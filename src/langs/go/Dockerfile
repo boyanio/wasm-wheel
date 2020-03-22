@@ -1,4 +1,4 @@
-FROM golang:1.11 AS wheel-part-go
+FROM golang:1.14 AS wheel-part-go
 
 WORKDIR /work
 COPY src/langs/go .

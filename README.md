@@ -52,7 +52,7 @@ Each wheel part represents a language that can be compiled to WebAssembly. My in
 
 #### C / C++
 
-Compiled by [emscripten](https://emscripten.org). Currently using emcc `1.39.4`.
+Compiled by [emscripten](https://emscripten.org). Currently using emcc `1.39.11`.
 
 #### C#
 
@@ -60,7 +60,7 @@ You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio
 
 #### AssemblyScript
 
-[AssemblyScript](https://www.npmjs.com/package/assemblyscript) defines a subset of TypeScript that can be compiled to WebAssembly. Currently using version `0.8.1` of the compiler.
+[AssemblyScript](https://www.npmjs.com/package/assemblyscript) defines a subset of TypeScript that can be compiled to WebAssembly. Currently using version `0.9.4` of the compiler.
 
 #### Rust
 
@@ -77,13 +77,13 @@ In order to compile Java into WebAssembly, I use [TeaVM](http://teavm.org/). The
 
 #### Kotlin
 
-[Kotlin/Native](https://github.com/JetBrains/kotlin-native/) v0.7.1 is used to compile Kotlin to WebAssembly. Compiling Kotlin to native restricts you from importing Java libraries. In order to generate random numbers, one may use C instead (as in the C wheel part), but this requires further configuration using the `cinterop` tool. I think it is easier just to import the JavaScript one.
+[Kotlin/Native](https://github.com/JetBrains/kotlin-native/) v1.3.70 is used to compile Kotlin to WebAssembly. Compiling Kotlin to native restricts you from importing Java libraries. In order to generate random numbers, one may use C instead (as in the C wheel part), but this requires further configuration using the `cinterop` tool. I think it is easier just to import the JavaScript one.
 
 As I don't need the `main` function, I tried specifying `-nomain` on the compiler, but it still throws an exception when initializing the WebAssembly module.
 
 #### Go
 
-[Go 1.11](https://tip.golang.org/doc/go1.11) adds experimental support for WebAssembly. The communication from JavaScript to Go works with callbacks, which made me change all other calls to use promises. The output file is quite large so far (~ 1.5MB), but this is already being [addressed](https://github.com/golang/go/issues/6853).
+[Go 1.14](https://tip.golang.org/doc/go1.14) ships experimental WebAssembly support. The communication from JavaScript to Go works with callbacks, which made me change all other calls to use promises. The output file is quite large so far (~ 1.5MB), but this is already being [addressed](https://github.com/golang/go/issues/6853).
 
 #### PHP
 
@@ -94,13 +94,14 @@ The PHP interpreter is [compiled](https://github.com/oraoto/pib/) to WebAssembly
 The following command will compile all sources to WASM and set up a HTTP server on port 8080. You can then access the site on `http://localhost:8080`.
 
 ```
+$> npm run build
 $> npm start
 ```
 
 You can re-build individual wheel parts by running the following command:
 
 ```
-$> npm run build -- [lang]
+$> npm run build:lang -- [lang]
 ```
 
 ## Questions & contribution

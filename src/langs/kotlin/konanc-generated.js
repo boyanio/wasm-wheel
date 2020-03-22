@@ -17,109 +17,12 @@ var konan = { libraries: [] };
  * limitations under the License.
  */
 
-konan.libraries.push ({
-    arenas: new Map(),
-    nextArena: 0,
-    Konan_js_allocateArena: function (array) {
-        var index = konan_dependencies.env.nextArena++;
-        konan_dependencies.env.arenas.set(index, array || []);
-        return index;
-        
-    },
-    Konan_js_freeArena: function(arenaIndex) {
-        var arena = konan_dependencies.env.arenas.get(arenaIndex);
-        arena.forEach(function(element, index) {
-            arena[index] = null;
-        });
-        konan_dependencies.env.arenas.delete(arenaIndex);
-    },
-    Konan_js_pushIntToArena: function (arenaIndex, value) {
-        var arena = konan_dependencies.env.arenas.get(arenaIndex);
-        arena.push(value);
-        return arena.length - 1;
-    },
-    Konan_js_addObjectToArena: function (arenaIndex, object) {
-        var arena = konan_dependencies.env.arenas.get(arenaIndex);
-        arena.push(object);
-        return arena.length - 1;
-    },
-    Konan_js_wrapLambda: function (functionArenaIndex, index) {
-        return (function () { 
-            var functionArena = konan_dependencies.env.arenas.get(functionArenaIndex);
-
-            // convert Arguments to an array
-            // to be provided by launcher.js
-            var argumentArenaIndex = konan_dependencies.env.Konan_js_allocateArena(Array.prototype.slice.call(arguments));
-
-            var resultIndex = instance.exports.Konan_js_runLambda(index, argumentArenaIndex, arguments.length);
-            var result = kotlinObject(argumentArenaIndex, resultIndex);
-            konan_dependencies.env.Konan_js_freeArena(argumentArenaIndex);
-
-            return result;
-        });
-    },
-    Konan_js_getInt: function(arenaIndex, objIndex, propertyNamePtr, propertyNameLength) {
-        // TODO:  The toUTF16String() is to be resolved by launcher.js runtime.
-        var property = toUTF16String(propertyNamePtr, propertyNameLength); 
-        var value =  kotlinObject(arenaIndex, objIndex)[property];
-        return value;
-    },
-    Konan_js_getProperty: function(arenaIndex, objIndex, propertyNamePtr, propertyNameLength) {
-        // TODO:  The toUTF16String() is to be resolved by launcher.js runtime.
-        var property = toUTF16String(propertyNamePtr, propertyNameLength); 
-        var arena = konan_dependencies.env.arenas.get(arenaIndex);
-        var value = arena[objIndex][property];
-        arena.push(value);
-        return arena.length - 1;
-    },
-    Konan_js_setFunction: function (arena, obj, propertyName, propertyNameLength, func) {
-        var name = toUTF16String(propertyName, propertyNameLength);
-        kotlinObject(arena, obj)[name] = konan_dependencies.env.Konan_js_wrapLambda(arena, func);
-    },
-
-    Konan_js_setString: function (arena, obj, propertyName, propertyNameLength, stringPtr, stringLength) {
-        var name = toUTF16String(propertyName, propertyNameLength);
-        var string = toUTF16String(stringPtr, stringLength);
-        kotlinObject(arena, obj)[name] = string;
-    },
-});
-
-// TODO: This is just a shorthand notation.
-function kotlinObject(arenaIndex, objectIndex) {
-    var arena = konan_dependencies.env.arenas.get(arenaIndex);
-    if (typeof arena == "undefined") {
-        console.log("No arena index " + arenaIndex + "for object" + objectIndex);
-        console.trace()
-    } 
-    return arena[objectIndex]
-}
-
-function toArena(arenaIndex, object) {
-    return konan_dependencies.env.Konan_js_addObjectToArena(arenaIndex, object);
-}
-
-/*
- * Copyright 2010-2018 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 let instance;
 let heap;
 let global_arguments;
 
 function isBrowser() {
-    return typeof window !== 'undefined';
+    return typeof self !== 'undefined';
 }
 
 let runtime;
@@ -229,6 +132,11 @@ let konan_dependencies = {
             fromString(utf8encode(readline() + '\n'), str);
             return str;
         },
+        read: function (file, str, size) {
+            let string = utf8encode(readline() + '\n');
+            fromString(string.substring(0, size), str);
+            return string.length;
+        },
         Konan_notify_memory_grow: function() {
             heap = new Uint8Array(instance.exports.memory.buffer);
         },
@@ -293,13 +201,11 @@ function invokeModule(inst, args) {
     return exit_status;
 }
 
-// Instantiate module in Browser in a sequence of promises.
+// Instantiate module in Browser.
 function instantiateAndRun(arraybuffer, args) {
-    WebAssembly.compile(arraybuffer)
-        .then(module => {
-            linkJavaScriptLibraries();
-            return WebAssembly.instantiate(module, konan_dependencies);
-        }).then(instance => invokeModule(instance, args));
+    linkJavaScriptLibraries();
+    WebAssembly.instantiate(arraybuffer, konan_dependencies)
+        .then(resultObject => invokeModule(resultObject.instance, args));
 }
 
 // Instantiate module in d8 synchronously.
@@ -310,15 +216,27 @@ function instantiateAndRunSync(arraybuffer, args) {
     return invokeModule(instance, args)
 }
 
+
+// Instantiate module in Browser using streaming instantiation.
+function instantiateAndRunStreaming(filename) {
+    linkJavaScriptLibraries();
+    WebAssembly.instantiateStreaming(fetch(filename), konan_dependencies)
+        .then(resultObject => invokeModule(resultObject.instance, [filename]));
+}
+
 konan.moduleEntry = function (args) {
     if (isBrowser()) {
         if (!document.currentScript.hasAttribute("wasm")) {
             throw new Error('Could not find the wasm attribute pointing to the WebAssembly binary.');
         }
         const filename = document.currentScript.getAttribute("wasm");
-        fetch(filename)
-            .then(response => response.arrayBuffer())
-            .then(arraybuffer => instantiateAndRun(arraybuffer, [filename]));
+        if (typeof WebAssembly.instantiateStreaming === 'function') {
+            instantiateAndRunStreaming(filename);
+        } else {
+            fetch(filename)
+              .then(response => response.arrayBuffer())
+              .then(arraybuffer => instantiateAndRun(arraybuffer, [filename]));
+        }
     } else {
         // Invoke from d8.
         const arrayBuffer = readbuffer(args[0]);
@@ -580,6 +498,103 @@ konan.libraries.push ({
     return doubleToReturnSlot(result);
   }
 })
+
+/*
+ * Copyright 2010-2018 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+konan.libraries.push ({
+    arenas: new Map(),
+    nextArena: 0,
+    Konan_js_allocateArena: function (array) {
+        var index = konan_dependencies.env.nextArena++;
+        konan_dependencies.env.arenas.set(index, array || []);
+        return index;
+        
+    },
+    Konan_js_freeArena: function(arenaIndex) {
+        var arena = konan_dependencies.env.arenas.get(arenaIndex);
+        arena.forEach(function(element, index) {
+            arena[index] = null;
+        });
+        konan_dependencies.env.arenas.delete(arenaIndex);
+    },
+    Konan_js_pushIntToArena: function (arenaIndex, value) {
+        var arena = konan_dependencies.env.arenas.get(arenaIndex);
+        arena.push(value);
+        return arena.length - 1;
+    },
+    Konan_js_addObjectToArena: function (arenaIndex, object) {
+        var arena = konan_dependencies.env.arenas.get(arenaIndex);
+        arena.push(object);
+        return arena.length - 1;
+    },
+    Konan_js_wrapLambda: function (functionArenaIndex, index) {
+        return (function () { 
+            var functionArena = konan_dependencies.env.arenas.get(functionArenaIndex);
+
+            // convert Arguments to an array
+            // to be provided by launcher.js
+            var argumentArenaIndex = konan_dependencies.env.Konan_js_allocateArena(Array.prototype.slice.call(arguments));
+
+            var resultIndex = instance.exports.Konan_js_runLambda(index, argumentArenaIndex, arguments.length);
+            var result = kotlinObject(argumentArenaIndex, resultIndex);
+            konan_dependencies.env.Konan_js_freeArena(argumentArenaIndex);
+
+            return result;
+        });
+    },
+    Konan_js_getInt: function(arenaIndex, objIndex, propertyNamePtr, propertyNameLength) {
+        // TODO:  The toUTF16String() is to be resolved by launcher.js runtime.
+        var property = toUTF16String(propertyNamePtr, propertyNameLength); 
+        var value =  kotlinObject(arenaIndex, objIndex)[property];
+        return value;
+    },
+    Konan_js_getProperty: function(arenaIndex, objIndex, propertyNamePtr, propertyNameLength) {
+        // TODO:  The toUTF16String() is to be resolved by launcher.js runtime.
+        var property = toUTF16String(propertyNamePtr, propertyNameLength); 
+        var arena = konan_dependencies.env.arenas.get(arenaIndex);
+        var value = arena[objIndex][property];
+        arena.push(value);
+        return arena.length - 1;
+    },
+    Konan_js_setFunction: function (arena, obj, propertyName, propertyNameLength, func) {
+        var name = toUTF16String(propertyName, propertyNameLength);
+        kotlinObject(arena, obj)[name] = konan_dependencies.env.Konan_js_wrapLambda(arena, func);
+    },
+
+    Konan_js_setString: function (arena, obj, propertyName, propertyNameLength, stringPtr, stringLength) {
+        var name = toUTF16String(propertyName, propertyNameLength);
+        var string = toUTF16String(stringPtr, stringLength);
+        kotlinObject(arena, obj)[name] = string;
+    },
+});
+
+// TODO: This is just a shorthand notation.
+function kotlinObject(arenaIndex, objectIndex) {
+    var arena = konan_dependencies.env.arenas.get(arenaIndex);
+    if (typeof arena == "undefined") {
+        console.log("No arena index " + arenaIndex + "for object" + objectIndex);
+        console.trace()
+    } 
+    return arena[objectIndex]
+}
+
+function toArena(arenaIndex, object) {
+    return konan_dependencies.env.Konan_js_addObjectToArena(arenaIndex, object);
+}
 
 if (isBrowser()) {
    konan.moduleEntry([]);
