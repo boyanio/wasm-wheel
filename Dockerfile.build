@@ -5,11 +5,11 @@ WORKDIR /app
 COPY . .
 
 # This will be replaced by the build script
-COPY-WHEEL-PARTS
+# COPY-WHEEL-PARTS
 
 RUN npm i npm@latest -g && \
-    npm install && \
+    npm i && \
     npm run build -- loaders metadata
 
 EXPOSE 8080
-CMD [ "npm", "run", "serve" ]
+CMD [ "npm", "start" ]

@@ -14,7 +14,7 @@ RUN curl -SL https://github.com/boyanio/DotNetAnywhere/archive/master.tar.gz | t
     rm -rf ./DotNetAnywhere-master
 
 # Compile DotNetAnywhere to WebAssembly
-FROM trzeci/emscripten:sdk-tag-1.38.25-64bit AS wheel-part-csharp-wasm
+FROM trzeci/emscripten:1.39.11-upstream AS wheel-part-csharp-wasm
 
 WORKDIR /work
 

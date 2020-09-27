@@ -1,7 +1,8 @@
 import kotlin.math.floor;
 import kotlinx.wasm.jsinterop.ReturnSlot_getDouble;
 
-fun main(args: Array<String>) {
+fun main() {
+  // Required by the compiler
 }
 
 @Retain

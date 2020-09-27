@@ -52,7 +52,7 @@ Each wheel part represents a language that can be compiled to WebAssembly. My in
 
 #### C / C++
 
-Compiled by [emscripten](https://emscripten.org). Currently using emcc `1.39.11`.
+Compiled by [emscripten](https://emscripten.org).
 
 #### C#
 
@@ -64,7 +64,7 @@ You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio
 
 #### Rust
 
-You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to add the wasm32 target. Tested with `rustc 1.39.0 (4560ea788 2019-11-04)`.
+You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to add the wasm32 target.
 
 ```
 $> rustup update
@@ -77,7 +77,7 @@ In order to compile Java into WebAssembly, I use [TeaVM](http://teavm.org/). The
 
 #### Kotlin
 
-[Kotlin/Native](https://github.com/JetBrains/kotlin-native/) v1.3.70 is used to compile Kotlin to WebAssembly. Compiling Kotlin to native restricts you from importing Java libraries. In order to generate random numbers, one may use C instead (as in the C wheel part), but this requires further configuration using the `cinterop` tool. I think it is easier just to import the JavaScript one.
+[Kotlin/Native](https://github.com/JetBrains/kotlin-native/) is used to compile Kotlin to WebAssembly. Compiling Kotlin to native restricts you from importing Java libraries. In order to generate random numbers, one may use C instead (as in the C wheel part), but this requires further configuration using the `cinterop` tool. I think it is easier just to import the JavaScript one.
 
 As I don't need the `main` function, I tried specifying `-nomain` on the compiler, but it still throws an exception when initializing the WebAssembly module.
 

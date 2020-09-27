@@ -1,4 +1,4 @@
-FROM trzeci/emscripten:sdk-tag-1.39.11-64bit AS wheel-part-php
+FROM trzeci/emscripten:1.39.11-upstream AS wheel-part-php
 
 WORKDIR /work
 

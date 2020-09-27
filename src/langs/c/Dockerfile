@@ -1,4 +1,4 @@
-FROM trzeci/emscripten:sdk-tag-1.39.4-64bit AS wheel-part-c
+FROM trzeci/emscripten:1.39.11-upstream AS wheel-part-c
 
 WORKDIR /work
 COPY src/langs/c .

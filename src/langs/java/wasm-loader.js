@@ -16,6 +16,17 @@
   };
 
   const importObject = {
+    teavm: {
+      logString: (what) => {
+        console.log('Java: lologStringgInt', what);
+      },
+      logInt: (what) => {
+        console.log('Java: logInt', what);
+      },
+      logOutOfMemory: (what) => {
+        console.log('Java: logOutOfMemory', what);
+      }
+    },
     teavmMath: Math
   };
 

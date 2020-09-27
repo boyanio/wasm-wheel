@@ -24,7 +24,7 @@ const buildDockerfile = async() => {
   const dockerfileBuildPath = path.resolve(rootDir, 'Dockerfile.build');
   const dockerfileFinalPath = path.resolve(rootDir, 'Dockerfile');
   const buildDockerfile = await readFile(dockerfileBuildPath, fileOps);
-  dockerfile += `${buildDockerfile.replace('COPY-WHEEL-PARTS', dockerfileCopyWheelParts)}`;
+  dockerfile += `${buildDockerfile.replace('# COPY-WHEEL-PARTS', dockerfileCopyWheelParts)}`;
   await writeFile(dockerfileFinalPath, dockerfile, fileOps);
 };
 
