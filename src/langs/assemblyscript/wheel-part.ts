@@ -1,8 +1,8 @@
-@external("env", "random")
+@external('env', 'random')
 declare function random(): f64;
 
 export function name(): string {
-  return "AssemblyScript";
+  return 'AssemblyScript';
 }
 
 export function feelingLucky(): f64 {

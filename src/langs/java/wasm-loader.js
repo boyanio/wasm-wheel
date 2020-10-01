@@ -1,10 +1,12 @@
 /* globals wheel */
 (() => {
   const getInt = (heap, offset) => {
-    return heap[offset + 0] |
-      heap[offset + 1] << 8 |
-      heap[offset + 2] << 16 |
-      heap[offset + 3] << 24;
+    return (
+      heap[offset + 0] |
+      (heap[offset + 1] << 8) |
+      (heap[offset + 2] << 16) |
+      (heap[offset + 3] << 24)
+    );
   };
 
   const javaToJavaScriptString = (heap, offset) => {
@@ -12,7 +14,10 @@
     const charArrayOffset = getInt(heap, offset + 8);
     const charArrayLength = getInt(heap, charArrayOffset + 8);
 
-    return String.fromCharCode.apply(String, new Uint16Array(heap.buffer, charArrayOffset + 12, charArrayLength));
+    return String.fromCharCode.apply(
+      String,
+      new Uint16Array(heap.buffer, charArrayOffset + 12, charArrayLength)
+    );
   };
 
   const importObject = {
@@ -25,13 +30,14 @@
       },
       logOutOfMemory: (what) => {
         console.log('Java: logOutOfMemory', what);
-      }
+      },
     },
-    teavmMath: Math
+    teavmMath: Math,
   };
 
   wheel.loadWheelPart(
     'wheel-part-java.wasm',
     javaToJavaScriptString,
-    importObject);
+    importObject
+  );
 })();

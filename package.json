@@ -13,7 +13,9 @@
     "build:loaders": "node scripts/build.js loaders",
     "build:dockerfile": "node scripts/dockerfile.js",
     "build:docker": "node scripts/dockerfile.js && docker build -t wasm-wheel:latest .",
-    "lint": "node_modules/.bin/eslint . --ignore-path .gitignore",
+    "prettier:check": "prettier . --check",
+    "prettier:write": "prettier . --write",
+    "lint": "eslint . --ignore-path .gitignore",
     "start": "node scripts/serve.js"
   },
   "license": "MIT",
@@ -24,6 +26,8 @@
   "devDependencies": {
     "connect": "^3.6.5",
     "eslint": "^5.15.3",
+    "eslint-config-prettier": "^6.12.0",
+    "prettier": "^2.1.2",
     "serve-static": "^1.13.1"
   }
 }

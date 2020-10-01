@@ -10,12 +10,9 @@
 
   const importObject = {
     env: {
-      random: Math.random
-    }
+      random: Math.random,
+    },
   };
 
-  wheel.loadWheelPart(
-    'wheel-part-rust.wasm',
-    utf8ToString,
-    importObject);
+  wheel.loadWheelPart('wheel-part-rust.wasm', utf8ToString, importObject);
 })();

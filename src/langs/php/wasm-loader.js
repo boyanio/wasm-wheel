@@ -1,26 +1,27 @@
 /* globals PHP, wheel */
 (async () => {
-
-  const injectWasmLoader = () => new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    document.body.appendChild(script);
-    script.onload = resolve;
-    script.onerror = reject;
-    script.async = true;
-    script.src = wheel.resolveFilePath('php.js');
-  });
+  const injectWasmLoader = () =>
+    new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      document.body.appendChild(script);
+      script.onload = resolve;
+      script.onerror = reject;
+      script.async = true;
+      script.src = wheel.resolveFilePath('php.js');
+    });
 
   const phpFileScript = wheel.resolveFilePath('wheel-part-php.txt');
-  const wheelPartSource = await fetch(phpFileScript).then(r => r.text());
+  const wheelPartSource = await fetch(phpFileScript).then((r) => r.text());
 
   const promiseResolvers = {};
   let lastPromiseId = 0;
   let php = null;
 
-  const execPhpCode = code => php.ccall('pib_eval', 'number', ['string'], [code]);
+  const execPhpCode = (code) =>
+    php.ccall('pib_eval', 'number', ['string'], [code]);
 
   const phpOpts = {
-    locateFile: file => `wasm/${file}`,
+    locateFile: (file) => `wasm/${file}`,
     postRun: [
       () => {
         const feelingLuckyPromiseFunc = () => {
@@ -38,17 +39,19 @@
           });
         };
         wheel.dispatchWheelPartLoadedEvent('PHP', feelingLuckyPromiseFunc);
-      }
+      },
     ],
     print: function (text) {
       if (arguments.length > 1) {
         text = Array.prototype.slice.call(arguments).join(' ');
       }
 
-      const [promiseId, result] = text.split(':').map(part => parseInt(part, 10));
+      const [promiseId, result] = text
+        .split(':')
+        .map((part) => parseInt(part, 10));
       promiseResolvers[promiseId](result);
       delete promiseResolvers[promiseId];
-    }
+    },
   };
 
   await injectWasmLoader();

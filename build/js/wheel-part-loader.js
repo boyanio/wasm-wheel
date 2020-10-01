@@ -9,11 +9,14 @@
     };
   }
 
-  let resolveFilePath = file => `wasm/${file}`;
+  let resolveFilePath = (file) => `wasm/${file}`;
 
   const instantiateWasmFile = async (wasmFile, importObject) => {
     try {
-      const { instance } = await WebAssembly.instantiateStreaming(fetch(wasmFile), importObject);
+      const { instance } = await WebAssembly.instantiateStreaming(
+        fetch(wasmFile),
+        importObject
+      );
       return instance;
     } catch (err) {
       console.error(`Error instantiating ${wasmFile}. ${err}`);
@@ -24,8 +27,8 @@
     const event = new CustomEvent('wheelPartLoaded', {
       detail: {
         name: name,
-        feelingLucky: feelingLuckyPromiseFunc
-      }
+        feelingLucky: feelingLuckyPromiseFunc,
+      },
     });
     document.dispatchEvent(event);
   };
@@ -35,8 +38,8 @@
     readStringFromMemory,
     importObject = {},
     exportedNames = { name: 'name', feelingLucky: 'feelingLucky' },
-    onWasmInstantiaated) => {
-    
+    onWasmInstantiaated
+  ) => {
     const wasmFile = resolveFilePath(wasmFileName);
     const wasmInstance = await instantiateWasmFile(wasmFile, importObject);
 
@@ -44,18 +47,21 @@
       onWasmInstantiaated(wasmInstance);
     }
 
-    const memory = wasmInstance.exports.memory || (importObject.env || {}).memory;
+    const memory =
+      wasmInstance.exports.memory || (importObject.env || {}).memory;
     if (!memory) {
-      throw new Error(`${wasmFileName} must either require import of memory (env.memory) er export its own memory`);
+      throw new Error(
+        `${wasmFileName} must either require import of memory (env.memory) er export its own memory`
+      );
     }
 
     const heap = new Uint8Array(memory.buffer);
     const namePtr = wasmInstance.exports[exportedNames.name]();
     const wheelPartName = readStringFromMemory(heap, namePtr);
 
-    dispatchWheelPartLoadedEvent(
-      wheelPartName,
-      () => Promise.resolve(wasmInstance.exports[exportedNames.feelingLucky]()));
+    dispatchWheelPartLoadedEvent(wheelPartName, () =>
+      Promise.resolve(wasmInstance.exports[exportedNames.feelingLucky]())
+    );
   };
 
   const setupWheelPartLoader = (loader) => {
@@ -70,15 +76,18 @@
   };
 
   const init = async () => {
-    const { fileHashMap } = await fetch(`wasm/metadata.json?v=${new Date().getTime()}`)
-      .then(x => x.json());
+    const { fileHashMap } = await fetch(
+      `wasm/metadata.json?v=${new Date().getTime()}`
+    ).then((x) => x.json());
 
-    resolveFilePath = file => `wasm/${file}?v=${fileHashMap[file]}`;
+    resolveFilePath = (file) => `wasm/${file}?v=${fileHashMap[file]}`;
     wheel.resolveFilePath = resolveFilePath;
-    
+
     Object.keys(fileHashMap)
-      .filter(file => file.endsWith('wasm-loader.js'))
-      .forEach(file => setupWheelPartLoader(`wasm/${file}?v=${fileHashMap[file]}`));
+      .filter((file) => file.endsWith('wasm-loader.js'))
+      .forEach((file) =>
+        setupWheelPartLoader(`wasm/${file}?v=${fileHashMap[file]}`)
+      );
   };
 
   wheel.dispatchWheelPartLoadedEvent = dispatchWheelPartLoadedEvent;

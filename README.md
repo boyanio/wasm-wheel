@@ -42,7 +42,6 @@ You can re-build individual wheel parts by running
 $> npm run build -- [lang]
 ```
 
-
 ## Wheel parts
 
 Each wheel part represents a language that can be compiled to WebAssembly. My initial idea was to use toolchain to compile each source automatically, but this turned out to be a bit more complex. That is why I am putting here how each source can be compiled individually.

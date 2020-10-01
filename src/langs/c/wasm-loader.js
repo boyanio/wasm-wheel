@@ -10,17 +10,17 @@
 
   const importObject = {
     env: {
-      jsrandom: Math.random
-    }
+      jsrandom: Math.random,
+    },
   };
 
-  const onWasmInstantiaated = instance =>
-    instance.exports._start();
+  const onWasmInstantiaated = (instance) => instance.exports._start();
 
   wheel.loadWheelPart(
     'wheel-part-c.wasm',
     utf8ToString,
     importObject,
     { name: 'name', feelingLucky: 'feelingLucky' },
-    onWasmInstantiaated);
+    onWasmInstantiaated
+  );
 })();

@@ -44,7 +44,8 @@ const buildMetadata = async () => {
 
   await writeFile(
     path.resolve(buildWasmDir, 'metadata.json'),
-    JSON.stringify({ fileHashMap }, null, 2));
+    JSON.stringify({ fileHashMap }, null, 2)
+  );
 };
 
 const buildWheelPart = async (lang) => {

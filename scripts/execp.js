@@ -12,7 +12,7 @@ module.exports = function execp(cmd, opts) {
     ls.on('exit', (code) => {
       if (code !== 0) {
         reject(code);
-      } else {  
+      } else {
         resolve();
       }
     });
