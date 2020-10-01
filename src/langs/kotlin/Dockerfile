@@ -1,7 +1,7 @@
 FROM openjdk:8-jdk AS wheel-part-kotlin
 
 WORKDIR /work
-COPY src/langs/kotlin .
+COPY . .
 
 ENV KOTLIN_NATIVE_VERSION="1.4.10"
 

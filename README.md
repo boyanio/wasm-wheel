@@ -91,7 +91,7 @@ The PHP interpreter is [compiled](https://github.com/oraoto/pib/) to WebAssembly
 
 ### Build & Run
 
-The following command will compile all sources to WASM and set up a HTTP server on port 8080. You can then access the site on `http://localhost:8080`.
+Compilation is done via Docker. The following command will compile all sources to WASM and set up a HTTP server on port 8080. You can then access the site on `http://localhost:8080`.
 
 ```
 $> npm run build

@@ -1,8 +1,7 @@
 FROM trzeci/emscripten:1.39.11-upstream AS wheel-part-php
 
 WORKDIR /work
-
-COPY src/langs/php .
+COPY . .
 
 ENV PIB_REPO_URL=https://github.com/oraoto/pib
 ENV PIB_COMMIT_ID=7d4368235c0cda437ee47cbd389d7c11e179a371

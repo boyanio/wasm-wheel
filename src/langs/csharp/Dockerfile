@@ -3,7 +3,7 @@ FROM mono:5.14 AS wheel-part-csharp-mono
 
 WORKDIR /work
 
-COPY src/langs/csharp .
+COPY . .
 
 RUN curl -SL https://github.com/boyanio/DotNetAnywhere/archive/master.tar.gz | tar xz && \
     mkdir ../output && \
@@ -18,7 +18,7 @@ FROM trzeci/emscripten:1.39.11-upstream AS wheel-part-csharp-wasm
 
 WORKDIR /work
 
-COPY src/langs/csharp .
+COPY . .
 
 RUN curl -SL https://github.com/boyanio/DotNetAnywhere/archive/master.tar.gz | tar xz && \
     chmod +x ./DotNetAnywhere-master/native/build.sh && \

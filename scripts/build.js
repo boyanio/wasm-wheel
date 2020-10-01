@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
 const { createHash } = require('./createHash');
+const execp = require('./execp');
 
 const readdir = promisify(fs.readdir);
 const writeFile = promisify(fs.writeFile);
@@ -11,7 +12,7 @@ const mkdir = promisify(fs.mkdir);
 
 const rootDir = path.resolve(__dirname, '../');
 const buildWasmDir = path.resolve(rootDir, 'build/wasm');
-const langDir = path.resolve(rootDir, 'src/langs');
+const langsDir = path.resolve(rootDir, 'src/langs');
 
 const createBuildWasmDir = async () => {
   if (!(await exists(buildWasmDir))) {
@@ -46,34 +47,35 @@ const buildMetadata = async () => {
     JSON.stringify({ fileHashMap }, null, 2));
 };
 
-const requireWheelPartBuildExports = async (lang) => {
-  const buildFile = path.resolve(langDir, `${lang}/build.js`);
-  if (!(await exists(buildFile))) {
-    throw `Cannot find build file for ${lang} wheel part at '${buildFile}'`;
-  }
-
-  return require(buildFile);
-};
-
 const buildWheelPart = async (lang) => {
   console.log(`\nBuilding ${lang} wheel part ...`);
 
-  const { buildWasm, buildLoader } = await requireWheelPartBuildExports(lang);
-  await buildWasm(buildWasmDir);
-  await buildLoader(buildWasmDir);
+  await buildDocker(lang);
+  await buildLoader(lang);
+};
+
+const buildDocker = async (lang) => {
+  const langDir = path.resolve(langsDir, lang);
+
+  const dockerBuildCmd = `docker build -t wheel-part-${lang}:latest .`;
+  await execp(dockerBuildCmd, { cwd: langDir });
+
+  const dockerRunCmd = `docker run --rm -v ${langDir}:/tmp wheel-part-${lang}:latest cp -r ../output ../tmp`;
+  await execp(dockerRunCmd, { cwd: langDir });
 };
 
 const buildLoader = async (lang) => {
   console.log(`\nBuilding ${lang} wheel part loader ...`);
 
-  const { buildLoader } = await requireWheelPartBuildExports(lang);
-  await buildLoader(buildWasmDir);
+  const buildFile = path.resolve(langsDir, `${lang}/build.js`);
+  const build = require(buildFile);
+  await build(buildWasmDir);
 };
 
 const buildLoaders = async () => {
   console.log('\nBuilding wheel part loaders...');
 
-  const langs = await readdir(langDir);
+  const langs = await readdir(langsDir);
   for (const lang of langs) {
     await buildLoader(lang);
   }
@@ -82,7 +84,7 @@ const buildLoaders = async () => {
 const buildAllWheelParts = async () => {
   console.log('\nBuilding all wheel parts...');
 
-  const langs = await readdir(langDir);
+  const langs = await readdir(langsDir);
   for (const lang of langs) {
     await buildWheelPart(lang);
   }
@@ -91,17 +93,17 @@ const buildAllWheelParts = async () => {
 const buildWithArgs = async (args) => {
   for (let arg of args) {
     switch (arg) {
-    case 'metadata':
-      await buildMetadata();
-      break;
+      case 'metadata':
+        await buildMetadata();
+        break;
 
-    case 'loaders':
-      await buildLoaders();
-      break;
+      case 'loaders':
+        await buildLoaders();
+        break;
 
-    default:
-      await buildWheelPart(arg);
-      break;
+      default:
+        await buildWheelPart(arg);
+        break;
     }
   }
 };

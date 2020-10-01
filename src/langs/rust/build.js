@@ -1,18 +1,9 @@
 const fs = require('fs');
 const { promisify } = require('util');
-const execp = require('../../../scripts/execp');
 
 const copyFile = promisify(fs.copyFile);
 
-const buildWasm = async (buildDir) => {
-  await execp(`rustc --target wasm32-unknown-unknown -C opt-level=z -C lto --crate-type=cdylib -o ${buildDir}/wheel-part-rust.wasm ${__dirname}/wheel-part.rs`);
-};
-
-const buildLoader = async (buildDir) => {
+module.exports = async (buildDir) => {
+  await copyFile(`${__dirname}/output/wheel-part-rust.wasm`, `${buildDir}/wheel-part-rust.wasm`);
   await copyFile(`${__dirname}/wasm-loader.js`, `${buildDir}/wheel-part-rust.wasm-loader.js`);
-};
-
-module.exports = {
-  buildLoader,
-  buildWasm
 };

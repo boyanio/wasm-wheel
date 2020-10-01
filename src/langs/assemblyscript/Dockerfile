@@ -1,7 +1,7 @@
 FROM node:8 AS wheel-part-assemblyscript
 
 WORKDIR /work
-COPY src/langs/assemblyscript .
+COPY . .
 
 RUN npm i npm@latest -g && \
         npm ci

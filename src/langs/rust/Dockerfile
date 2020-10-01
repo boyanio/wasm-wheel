@@ -1,7 +1,7 @@
 FROM rust:1.31 AS wheel-part-rust
 
 WORKDIR /work
-COPY src/langs/rust .
+COPY . .
 
 RUN rustup update && \
   rustup target add wasm32-unknown-unknown && \

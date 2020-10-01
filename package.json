@@ -9,7 +9,6 @@
   },
   "scripts": {
     "build": "node scripts/build.js",
-    "build:lang": "node scripts/build.js",
     "build:metadata": "node scripts/build.js metadata",
     "build:loaders": "node scripts/build.js loaders",
     "build:dockerfile": "node scripts/dockerfile.js",
