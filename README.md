@@ -24,45 +24,42 @@ In theory, when compiling each language, the output wasm file should be almost i
 
 ## Getting started
 
-Using Docker is the easiest way to get started. With Docker multi-stage builds for building each wheel part, the output image becomes around (only) _113MB_. Each wheel part has a Dockerfile in its folder, so they all need to be combined into one global Dockerfile before building the image.
-
-```
-$> git clone https://github.com/boyanio/wasm-wheel.git
-$> cd wasm-wheel
-$> npm run build:dockerfile
-$> docker build . -t wasm-wheel
-$> docker run -p 8080:8080 -t wasm-wheel:latest
-```
-
-## Manual installation
-
-The basic requirement to set up the repository is Node.js. I have tested with version _8.9.1_, but other (newer) versions would probably work as well.
+You need Docker to build each wheel part.
 
 ```
 $> git clone https://github.com/boyanio/wasm-wheel.git
 $> cd wasm-wheel
 $> npm i
+$> npm run build
+$> npm start
 ```
 
-Furthermore, each language has additional requirements.
+You can then access the site on `http://localhost:8080`.
 
-### Compiling wheel parts
+You can re-build individual wheel parts by running
+
+```
+$> npm run build -- [lang]
+```
+
+
+## Wheel parts
 
 Each wheel part represents a language that can be compiled to WebAssembly. My initial idea was to use toolchain to compile each source automatically, but this turned out to be a bit more complex. That is why I am putting here how each source can be compiled individually.
 
-#### C / C++
+### C / C++
 
 Compiled by [emscripten](https://emscripten.org).
 
-#### C#
+### C#
 
 You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio 2017+ installed on your machine to compile the source. Although Mono has an [example](http://www.mono-project.com/news/2017/08/09/hello-webassembly/) of compiling C# directly to WebAssembly, the set-up is a bit more complicated. That is why I use Steve Sanderson's initial adjustment of [DotNetAnywhere](https://github.com/boyanio/DotNetAnywhere) to interpret .NET into the browser. You would also need [emscripten](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) >= 1.38.12 to compile DotNetAnywhere's interpretter to WebAssembly.
 
-#### AssemblyScript
+### AssemblyScript
 
 [AssemblyScript](https://www.npmjs.com/package/assemblyscript) defines a subset of TypeScript that can be compiled to WebAssembly. Currently using version `0.9.4` of the compiler.
 
-#### Rust
+### Rust
 
 You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to add the wasm32 target.
 
@@ -71,38 +68,21 @@ $> rustup update
 $> rustup target add wasm32-unknown-unknown
 ```
 
-#### Java
+### Java
 
 In order to compile Java into WebAssembly, I use [TeaVM](http://teavm.org/). The only thing you need is Maven - it will install its depedencies afterwards. You obviously need Java SDK as well.
 
-#### Kotlin
+### Kotlin
 
 [Kotlin/Native](https://github.com/JetBrains/kotlin-native/) is used to compile Kotlin to WebAssembly. Compiling Kotlin to native restricts you from importing Java libraries. In order to generate random numbers, one may use C instead (as in the C wheel part), but this requires further configuration using the `cinterop` tool. I think it is easier just to import the JavaScript one.
 
-As I don't need the `main` function, I tried specifying `-nomain` on the compiler, but it still throws an exception when initializing the WebAssembly module.
-
-#### Go
+### Go
 
 [Go 1.14](https://tip.golang.org/doc/go1.14) ships experimental WebAssembly support. The communication from JavaScript to Go works with callbacks, which made me change all other calls to use promises. The output file is quite large so far (~ 1.5MB), but this is already being [addressed](https://github.com/golang/go/issues/6853).
 
-#### PHP
+### PHP
 
 The PHP interpreter is [compiled](https://github.com/oraoto/pib/) to WebAssembly and then using the wrapper function `pib_eval` we can evaluate PHP code, which gets printed on the console.
-
-### Build & Run
-
-Compilation is done via Docker. The following command will compile all sources to WASM and set up a HTTP server on port 8080. You can then access the site on `http://localhost:8080`.
-
-```
-$> npm run build
-$> npm start
-```
-
-You can re-build individual wheel parts by running the following command:
-
-```
-$> npm run build:lang -- [lang]
-```
 
 ## Questions & contribution
 
