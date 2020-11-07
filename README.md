@@ -21,6 +21,7 @@ In theory, when compiling each language, the output wasm file should be almost i
 - Kotlin
 - Go
 - PHP
+- Python
 
 ## Getting started
 
@@ -82,6 +83,10 @@ In order to compile Java into WebAssembly, I use [TeaVM](http://teavm.org/). The
 ### PHP
 
 The PHP interpreter is [compiled](https://github.com/oraoto/pib/) to WebAssembly and then using the wrapper function `pib_eval` we can evaluate PHP code, which gets printed on the console.
+
+### Python
+
+[Pyodide](https://github.com/iodide-project/pyodide) brings the Python 3.8 runtime to the browser via WebAssembly, along with the Python scientific stack.
 
 ## Questions & contribution
 

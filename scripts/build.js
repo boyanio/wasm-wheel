@@ -57,12 +57,13 @@ const buildWheelPart = async (lang) => {
 
 const buildDocker = async (lang) => {
   const langDir = path.resolve(langsDir, lang);
+  if (await exists(path.resolve(langDir, 'Dockerfile'))) {
+    const dockerBuildCmd = `docker build -t wheel-part-${lang}:latest .`;
+    await execp(dockerBuildCmd, { cwd: langDir });
 
-  const dockerBuildCmd = `docker build -t wheel-part-${lang}:latest .`;
-  await execp(dockerBuildCmd, { cwd: langDir });
-
-  const dockerRunCmd = `docker run --rm -v ${langDir}:/tmp wheel-part-${lang}:latest cp -r ../output ../tmp`;
-  await execp(dockerRunCmd, { cwd: langDir });
+    const dockerRunCmd = `docker run --rm -v ${langDir}:/tmp wheel-part-${lang}:latest cp -r ../output ../tmp`;
+    await execp(dockerRunCmd, { cwd: langDir });
+  }
 };
 
 const buildLoader = async (lang) => {
