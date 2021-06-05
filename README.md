@@ -28,11 +28,9 @@ In theory, when compiling each language, the output wasm file should be almost i
 You need Docker to build each wheel part.
 
 ```
-$> git clone https://github.com/boyanio/wasm-wheel.git
-$> cd wasm-wheel
-$> npm i
-$> npm run build
-$> npm start
+npm i
+npm run build
+npm start
 ```
 
 You can then access the site on `http://localhost:8080`.
@@ -40,7 +38,7 @@ You can then access the site on `http://localhost:8080`.
 You can re-build individual wheel parts by running
 
 ```
-$> npm run build -- [lang]
+npm run build -- [lang]
 ```
 
 ## Wheel parts
@@ -64,8 +62,8 @@ You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio
 You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to add the wasm32 target.
 
 ```
-$> rustup update
-$> rustup target add wasm32-unknown-unknown
+rustup update
+rustup target add wasm32-unknown-unknown
 ```
 
 ### Java
