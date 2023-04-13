@@ -28,7 +28,7 @@ RUN curl -SL https://github.com/boyanio/DotNetAnywhere/archive/master.tar.gz | t
     rm -rf ./DotNetAnywhere-master
 
 
-FROM alpine:latest AS wheel-part-csharp
+FROM alpine:3.17.3 AS wheel-part-csharp
 
 WORKDIR /output
 
