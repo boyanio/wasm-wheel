@@ -4,7 +4,7 @@ WORKDIR /work
 COPY . .
 
 RUN npm i npm@9.6.4 -g && \
-    npm ci
+    npm ci --no-fund --no-audit
 
 RUN mkdir ../output && \
     node_modules/.bin/asc wheel-part.ts \
