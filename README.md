@@ -5,9 +5,9 @@
 The _Wheel of WebAssembly_ is a project aiming to show the diversity of languages that compile to WebAssembly. My initial idea was to define two functions in each language:
 
 - `name()` - returning the name of the language. This is used to render each part of the wheel.
-- `feelingLucky()` - returning a random integer between 1 and 100. This is used when the wheel is spinned.
+- `feelingLucky()` - returning a random integer between 1 and 100. This is used when the wheel is spun.
 
-In theory, when compiling each language, the output wasm file should be almost identical. In practice, this is not the case. As many of the compilers are still very experimental, these two functions cannot be definen in all the languages. Some have issues with generating a random number, so I import JavaSript's `Math.random()` to help them. Others cannot handle strings properly. WebAssembly defines only numeric types and strings are suppsed to be put in the linear memory and accessed via a pointer from JavaScript.
+In theory, when compiling each language, the output wasm file should be almost identical. In practice, this is not the case. As many of the compilers are still very experimental, these two functions cannot be defined in all the languages. Some have issues with generating a random number, so I import JavaScript's `Math.random()` to help them. Others cannot handle strings properly. WebAssembly defines only numeric types and strings are supposed to be put in the linear memory and accessed via a pointer from JavaScript.
 
 ![Wheel of WebAssembly screenShot](/assets/wasm-wheel-screenshot.jpg)
 
@@ -27,7 +27,7 @@ In theory, when compiling each language, the output wasm file should be almost i
 
 You need Docker to build each wheel part.
 
-```
+```bash
 npm i
 npm run build
 npm start
@@ -37,7 +37,7 @@ You can then access the site on `http://localhost:8080`.
 
 You can re-build individual wheel parts by running
 
-```
+```bash
 npm run build -- [lang]
 ```
 
@@ -51,24 +51,24 @@ Compiled by [emscripten](https://emscripten.org).
 
 ### C#
 
-You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio 2017+ installed on your machine to compile the source. Although Mono has an [example](http://www.mono-project.com/news/2017/08/09/hello-webassembly/) of compiling C# directly to WebAssembly, the set-up is a bit more complicated. That is why I use Steve Sanderson's initial adjustment of [DotNetAnywhere](https://github.com/boyanio/DotNetAnywhere) to interpret .NET into the browser. You would also need [emscripten](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) >= 1.38.12 to compile DotNetAnywhere's interpretter to WebAssembly.
+You would either need [Mono](http://www.mono-project.com/docs/) or Visual Studio 2017+ installed on your machine to compile the source. Although Mono has an [example](http://www.mono-project.com/news/2017/08/09/hello-webassembly/) of compiling C# directly to WebAssembly, the set-up is a bit more complicated. That is why I use Steve Sanderson's initial adjustment of [DotNetAnywhere](https://github.com/boyanio/DotNetAnywhere) to interpret .NET into the browser. You would also need [emscripten](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) >= 1.38.12 to compile DotNetAnywhere's interpreter to WebAssembly.
 
 ### AssemblyScript
 
-[AssemblyScript](https://www.npmjs.com/package/assemblyscript) defines a subset of TypeScript that can be compiled to WebAssembly. Currently using version `0.9.4` of the compiler.
+[AssemblyScript](https://www.npmjs.com/package/assemblyscript) defines a subset of TypeScript that can be compiled to WebAssembly.
 
 ### Rust
 
 You have to install the Rust toolchain by following these [instructions](https://www.rust-lang.org/en-US/install.html). Afterwards you need to add the wasm32 target.
 
-```
+```bash
 rustup update
 rustup target add wasm32-unknown-unknown
 ```
 
 ### Java
 
-In order to compile Java into WebAssembly, I use [TeaVM](http://teavm.org/). The only thing you need is Maven - it will install its depedencies afterwards. You obviously need Java SDK as well.
+In order to compile Java into WebAssembly, I use [TeaVM](http://teavm.org/). The only thing you need is Maven - it will install its dependencies afterwards. You obviously need Java SDK as well.
 
 ### Kotlin
 
