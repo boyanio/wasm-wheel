@@ -1,4 +1,4 @@
-/* globals WebAssembly, wheel */
+/* globals wheel */
 (() => {
   'use strict';
 
