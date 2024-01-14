@@ -95,11 +95,8 @@
     };
 
     const drawTicker = () => {
-      const _two = two;
-      const width = _two.width;
-
+      const width = two.width;
       const outerRadius = ratios.tickerRadius * width;
-
       const tickerCircle = drawTickerCircle(outerRadius);
       const circleCenter = tickerCircle.translation;
 
@@ -116,8 +113,7 @@
     };
 
     const drawCenterCircle = () => {
-      const _two = two;
-      const width = _two.width;
+      const width = two.width;
       const yOffset = width * ratios.tickerRadius * 2;
       const radius = (width - yOffset) / 2;
       const center = {
@@ -133,7 +129,7 @@
       centerCircleEl.innerCircle = innerCircle;
 
       const textSize = radius * ratios.textSize * 0.8;
-      const text = two.makeText('', center.x, center.y + textSize / 3);
+      const text = two.makeText('', center.x, center.y + textSize / 10);
       text.fill = '#fff';
       text.size = textSize;
       text.weight = 'bolder';
@@ -143,8 +139,7 @@
     };
 
     const drawTickerCircle = (outerRadius) => {
-      const _two2 = two;
-      const width = _two2.width;
+      const width = two.width;
       const arc = two.makeArcSegment(
         width / 2,
         outerRadius,
@@ -191,8 +186,7 @@
         destroyPaths();
       }
 
-      const _two3 = two;
-      const width = _two3.width;
+      const width = two.width;
       const numColors = COLORS.length;
       const rotationUnit = (2 * PI) / wheelParts.length;
       const yOffset = width * ratios.tickerRadius * 2;

@@ -38,13 +38,13 @@
     readStringFromMemory,
     importObject = {},
     exportedNames = { name: 'name', feelingLucky: 'feelingLucky' },
-    onWasmInstantiaated
+    onWasmInstantiated
   ) => {
     const wasmFile = resolveFilePath(wasmFileName);
     const wasmInstance = await instantiateWasmFile(wasmFile, importObject);
 
-    if (onWasmInstantiaated) {
-      onWasmInstantiaated(wasmInstance);
+    if (onWasmInstantiated) {
+      onWasmInstantiated(wasmInstance);
     }
 
     const memory =
