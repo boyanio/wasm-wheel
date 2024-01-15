@@ -6,18 +6,10 @@ const execp = require('./execp');
 const readdir = promisify(fs.readdir);
 const exists = promisify(fs.exists);
 const unlink = promisify(fs.unlink);
-const mkdir = promisify(fs.mkdir);
 
 const rootDir = path.resolve(__dirname, '../');
 const buildWasmDir = path.resolve(rootDir, 'build/wasm');
 const langsDir = path.resolve(rootDir, 'src/langs');
-
-const createBuildWasmDir = async () => {
-  if (!(await exists(buildWasmDir))) {
-    console.log('\nCreating the build wasm directory...');
-    await mkdir(buildWasmDir);
-  }
-};
 
 const cleanBuildWasmDir = async () => {
   if (await exists(buildWasmDir)) {
@@ -62,9 +54,8 @@ const buildAll = async () => {
 };
 
 const build = async () => {
-  await createBuildWasmDir();
   if (process.argv.length > 2) {
-    await buildWheelPart(process.argv.slice(2));
+    await buildWheelPart(process.argv[2]);
   } else {
     await buildAll();
   }
