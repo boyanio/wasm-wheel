@@ -29,7 +29,7 @@ You need Docker to build each wheel part.
 
 ```bash
 npm i
-npm run build
+npm run wasm
 npm start
 ```
 
@@ -38,7 +38,7 @@ You can then access the site on `http://localhost:8080`.
 You can re-build individual wheel parts by running
 
 ```bash
-npm run build -- [lang]
+npm run wasm -- [lang]
 ```
 
 ## Wheel parts

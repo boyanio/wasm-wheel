@@ -27,14 +27,6 @@
     );
   }
 
-  if (!global.require && typeof require !== 'undefined') {
-    global.require = require;
-  }
-
-  if (!global.fs && global.require) {
-    global.fs = require('fs');
-  }
-
   const enosys = () => {
     const err = new Error('not implemented');
     err.code = 'ENOSYS';

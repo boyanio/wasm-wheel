@@ -1,1 +1,4 @@
+dist
 package*.json
+src/langs/assemblyscript/wheel-part.ts
+src/langs/kotlin/konanc-generated.js

@@ -1,26 +1,26 @@
-/* globals wheel */
-(() => {
-  const utf8ToString = (heap, offset) => {
-    let s = '';
-    for (let i = offset; heap[i]; i++) {
-      s += String.fromCharCode(heap[i]);
-    }
-    return s;
-  };
+import wasmFile from './output/wheel-part-c.wasm?wasm';
+import { loadWheelPart } from '../../app/wheel-part-loader';
 
-  const importObject = {
-    env: {
-      jsrandom: Math.random,
-    },
-  };
+const utf8ToString = (heap, offset) => {
+  let s = '';
+  for (let i = offset; heap[i]; i++) {
+    s += String.fromCharCode(heap[i]);
+  }
+  return s;
+};
 
-  const onWasmInstantiaated = (instance) => instance.exports._start();
+const importObject = {
+  env: {
+    jsrandom: Math.random,
+  },
+};
 
-  wheel.loadWheelPart(
-    'wheel-part-c.wasm',
-    utf8ToString,
-    importObject,
-    { name: 'name', feelingLucky: 'feelingLucky' },
-    onWasmInstantiaated
-  );
-})();
+const onWasmInstantiated = (instance) => instance.exports._start();
+
+loadWheelPart(
+  wasmFile,
+  utf8ToString,
+  importObject,
+  { name: 'name', feelingLucky: 'feelingLucky' },
+  onWasmInstantiated
+);

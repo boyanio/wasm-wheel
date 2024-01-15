@@ -1,60 +1,52 @@
-/* global DotNetAnywhere, wheel */
-(async () => {
-  const injectWasmLoader = () =>
-    new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      document.body.appendChild(script);
-      script.onload = resolve;
-      script.onerror = reject;
-      script.async = true;
-      script.src = wheel.resolveFilePath('dna.js');
-    });
+import { dispatchWheelPartLoadedEvent } from '../../app/wheel-part-loader';
+import corlibDllPath from './output/corlib.dll?wasm';
+import wheelPartDllPath from './output/wheel-part-csharp.dll?wasm';
+import './output/dna.wasm?wasm';
+import DotNetAnywhere from './output/dna';
 
-  let dna = null;
+let dna = null;
 
-  const invokeCsharpFunc = (
-    assemblyName,
-    namespace,
-    className,
-    methodName,
-    stringArg,
-    returnType
-  ) =>
-    dna.ccall(
-      'JSInterop_CallDotNet',
-      returnType,
-      ['string', 'string', 'string', 'string', 'string'],
-      [assemblyName, namespace, className, methodName, stringArg]
+const invokeCsharpFunc = (
+  assemblyName,
+  namespace,
+  className,
+  methodName,
+  stringArg,
+  returnType
+) =>
+  dna.ccall(
+    'JSInterop_CallDotNet',
+    returnType,
+    ['string', 'string', 'string', 'string', 'string'],
+    [assemblyName, namespace, className, methodName, stringArg]
+  );
+
+const dnaOps = {
+  locateFile: (file) => `wasm/${file}`,
+  arguments: ['wheel-part-csharp.dll'],
+  preRun: () => {
+    dna.FS_createPreloadedFile('/', 'corlib.dll', corlibDllPath, true);
+    dna.FS_createPreloadedFile(
+      '/',
+      'wheel-part-csharp.dll',
+      wheelPartDllPath,
+      true
     );
-
-  const dnaOps = {
-    locateFile: (file) => wheel.resolveFilePath(file),
-    arguments: ['wheel-part-csharp.dll'],
-    preRun: () => {
-      dna.FS_createPreloadedFile('/', 'corlib.dll', 'wasm/corlib.dll', true);
-      dna.FS_createPreloadedFile(
-        '/',
-        'wheel-part-csharp.dll',
-        'wasm/wheel-part-csharp.dll',
-        true
+  },
+  postRun: () => {
+    const feelingLuckyPromiseFunc = () =>
+      Promise.resolve(
+        invokeCsharpFunc(
+          'wheel-part-csharp',
+          'WheelOfWasm',
+          'Program',
+          'feelingLucky',
+          null,
+          'number'
+        )
       );
-    },
-    postRun: () => {
-      const feelingLuckyPromiseFunc = () =>
-        Promise.resolve(
-          invokeCsharpFunc(
-            'wheel-part-csharp',
-            'WheelOfWasm',
-            'Program',
-            'feelingLucky',
-            null,
-            'number'
-          )
-        );
-      wheel.dispatchWheelPartLoadedEvent('C#', feelingLuckyPromiseFunc);
-    },
-  };
+    dispatchWheelPartLoadedEvent('C#', feelingLuckyPromiseFunc);
+  },
+};
 
-  await injectWasmLoader();
-  dna = DotNetAnywhere(dnaOps);
-})();
+dna = DotNetAnywhere(dnaOps);

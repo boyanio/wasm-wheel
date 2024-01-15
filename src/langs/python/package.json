@@ -1,7 +1,7 @@
 {
-  "name": "wheel-part-assemblyscript",
-  "title": "AssemblyScript wheel part for the Wheel of WebAssembly",
-  "description": "AssemblyScript wheel part for the Wheel of WebAssembly",
+  "name": "wheel-part-python",
+  "title": "Python wheel part for the Wheel of WebAssembly",
+  "description": "Python wheel part for the Wheel of WebAssembly",
   "version": "1.0.0",
   "author": {
     "name": "Boyan Mihaylov",
@@ -13,7 +13,6 @@
     "url": "https://github.com/boyanio/wasm-wheel.git"
   },
   "devDependencies": {
-    "assemblyscript": "^0.27.5",
-    "typescript": "^4.7.4"
+    "pyodide": "^0.24.1"
   }
 }

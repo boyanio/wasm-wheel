@@ -1,24 +1,16 @@
-/* globals languagePluginLoader, wheel, pyodide */
-(async () => {
-  const injectWasmLoader = () =>
-    new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      document.body.appendChild(script);
-      script.onload = resolve;
-      script.onerror = reject;
-      script.async = true;
-      script.src = 'https://cdn.jsdelivr.net/pyodide/v0.15.0/full/pyodide.js';
-    });
+import { loadPyodide } from 'pyodide';
+import './node_modules/pyodide/pyodide.asm';
+import './node_modules/pyodide/pyodide.asm.wasm?wasm';
+import './node_modules/pyodide/python_stdlib.zip?wasm';
+import './node_modules/pyodide/pyodide-lock.json?wasm';
+import wheelPartSource from './wheel-part.py?raw';
+import { dispatchWheelPartLoadedEvent } from '../../app/wheel-part-loader';
 
-  await injectWasmLoader();
-  await languagePluginLoader;
-
-  const pythonFileScript = wheel.resolveFilePath('wheel-part-python.txt');
-  const wheelPartSource = await fetch(pythonFileScript).then((r) => r.text());
-  await pyodide.runPythonAsync(wheelPartSource);
-
-  wheel.dispatchWheelPartLoadedEvent(
-    pyodide.globals.name(),
-    pyodide.globals.feelingLucky
-  );
-})();
+loadPyodide({
+  indexURL: 'wasm/',
+}).then((pyodide) => {
+  pyodide.runPython(wheelPartSource);
+  const nameFn = pyodide.globals.get('name');
+  const feelingLuckyFn = pyodide.globals.get('feelingLucky');
+  dispatchWheelPartLoadedEvent(nameFn(), feelingLuckyFn);
+});

@@ -8,13 +8,14 @@
     "url": "https://boyan.io"
   },
   "scripts": {
-    "build": "node scripts/build.js",
-    "build:metadata": "node scripts/build.js metadata",
-    "build:loaders": "node scripts/build.js loaders",
+    "wasm": "node scripts/wasm.js",
+    "build": "webpack --mode=production",
+    "build:dev": "webpack --watch",
+    "serve": "node scripts/serve.js",
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",
     "lint": "eslint . --ignore-path .gitignore",
-    "start": "node scripts/serve.js"
+    "start": "concurrently -k -n server,app -c magenta,cyan \"npm run serve\" \"npm run build:dev\""
   },
   "license": "MIT",
   "repository": {
@@ -22,10 +23,18 @@
     "url": "https://github.com/boyanio/wasm-wheel.git"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "connect": "^3.7.0",
+    "copy-webpack-plugin": "^12.0.1",
+    "css-loader": "^6.9.0",
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^8.8.0",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.7.7",
     "prettier": "^2.8.8",
-    "serve-static": "^1.15.0"
+    "serve-static": "^1.15.0",
+    "two.js": "^0.7.0-beta.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   }
 }

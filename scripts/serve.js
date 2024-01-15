@@ -4,7 +4,7 @@ const path = require('path');
 
 const port = process.argv.length > 2 ? parseInt(process.argv[2], 10) : 8080;
 const rootDir = path.resolve(__dirname, '../');
-const buildDir = path.resolve(rootDir, 'build');
+const buildDir = path.resolve(rootDir, 'dist');
 
 const setContentType = (response, path) => {
   const ext = path.split('.').pop().toLowerCase();

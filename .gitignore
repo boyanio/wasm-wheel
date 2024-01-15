@@ -2,3 +2,4 @@ node_modules
 build/wasm/*
 build/wheel-parts.json
 src/langs/*/output
+dist
