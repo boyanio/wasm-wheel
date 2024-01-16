@@ -1,0 +1,14 @@
+[package]
+name = "wheel-part-rust"
+version = "0.1.0"
+
+[dependencies]
+rand =  "0.8.5"
+
+[lib]
+path = "wheel-part.rs"
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = "z"
+lto = true

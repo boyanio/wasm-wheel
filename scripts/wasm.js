@@ -5,22 +5,9 @@ const execp = require('./execp');
 
 const readdir = promisify(fs.readdir);
 const exists = promisify(fs.exists);
-const unlink = promisify(fs.unlink);
 
 const rootDir = path.resolve(__dirname, '../');
-const buildWasmDir = path.resolve(rootDir, 'build/wasm');
 const langsDir = path.resolve(rootDir, 'src/langs');
-
-const cleanBuildWasmDir = async () => {
-  if (await exists(buildWasmDir)) {
-    console.log('\nCleaning the build wasm directory...');
-
-    const files = await readdir(buildWasmDir);
-    for (const file of files) {
-      await unlink(path.join(buildWasmDir, file));
-    }
-  }
-};
 
 const buildWheelPart = async (lang) => {
   console.log(`\nBuilding ${lang} wheel part ...`);
@@ -48,16 +35,11 @@ const buildAllWheelParts = async () => {
   }
 };
 
-const buildAll = async () => {
-  await cleanBuildWasmDir();
-  await buildAllWheelParts();
-};
-
 const build = async () => {
   if (process.argv.length > 2) {
     await buildWheelPart(process.argv[2]);
   } else {
-    await buildAll();
+    await buildAllWheelParts();
   }
 };
 

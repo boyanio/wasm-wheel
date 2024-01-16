@@ -1,5 +1,6 @@
 import wasmFile from './output/wheel-part-rust.wasm?wasm';
-import { loadWheelPart } from '../../app/wheel-part-loader';
+import { dispatchWheelPartLoadedEvent } from '../../app/wheel-part-loader';
+import { init, WASI } from '@wasmer/wasi';
 
 const utf8ToString = (heap, offset) => {
   let s = '';
@@ -9,10 +10,17 @@ const utf8ToString = (heap, offset) => {
   return s;
 };
 
-const importObject = {
-  env: {
-    random: Math.random,
-  },
-};
+Promise.all([init(), WebAssembly.compileStreaming(fetch(wasmFile))]).then(
+  ([, module]) => {
+    const wasi = new WASI({});
+    const instance = wasi.instantiate(module, {});
 
-loadWheelPart(wasmFile, utf8ToString, importObject);
+    const heap = new Uint8Array(instance.exports.memory.buffer);
+    const namePtr = instance.exports.name();
+    const name = utf8ToString(heap, namePtr);
+    dispatchWheelPartLoadedEvent(name, instance.exports.feelingLucky);
+  },
+  (err) => {
+    console.error('Error when instantiating Rust runtime', err);
+  }
+);

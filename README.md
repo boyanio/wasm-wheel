@@ -25,7 +25,7 @@ In theory, when compiling each language, the output wasm file should be almost i
 
 ## Getting started
 
-You need Docker to build each wheel part.
+You need Docker to build each wheel part. You need to create a [self-signed certificate](https://gist.github.com/elklein96/a15090f35a41e16bdc8574a7fb81e119) for localhost.
 
 ```bash
 npm i

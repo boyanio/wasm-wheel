@@ -23,6 +23,7 @@
     "url": "https://github.com/boyanio/wasm-wheel.git"
   },
   "devDependencies": {
+    "buffer": "^6.0.3",
     "concurrently": "^8.2.2",
     "connect": "^3.7.0",
     "copy-webpack-plugin": "^12.0.1",

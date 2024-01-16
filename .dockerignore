@@ -5,8 +5,6 @@ src/langs/*/Dockerfile
 src/langs/*/*.js
 src/langs/*/output
 npm-debug.log
-build/wasm/*
-build/wheel-parts.json
 tmp
 **/*.md
 LICENSE

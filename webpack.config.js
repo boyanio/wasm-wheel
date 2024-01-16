@@ -76,5 +76,19 @@ module.exports = {
     new webpack.IgnorePlugin({
       resourceRegExp: /^(path|ws|crypto|fs|os|util|node-fetch)$/,
     }),
+    // needed by @wasmer/wasi
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
   ],
+  externals: {
+    // needed by @wasmer/wasi
+    'wasmer_wasi_js_bg.wasm': true,
+  },
+  resolve: {
+    fallback: {
+      // needed by @wasmer/wasi
+      buffer: require.resolve('buffer/'),
+    },
+  },
 };

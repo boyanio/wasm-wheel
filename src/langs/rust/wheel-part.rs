@@ -1,8 +1,6 @@
-// There are some issues compiling the rand crate using wasm32-unknown-unknown,
-// so it is easier to import it from JavaScript
-extern {
-  fn random() -> f64;
-}
+extern crate rand;
+
+use rand::Rng;
 
 #[no_mangle]
 pub fn name() -> *const u8 {
@@ -13,5 +11,7 @@ pub fn name() -> *const u8 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn feelingLucky() -> f64 {
-  unsafe { (random() * 100.0).floor() + 1.0 }
+  let mut rng = rand::thread_rng();
+  let y: f64 = rng.gen_range(1.0..101.0);
+  return y.floor() + 1.0
 }

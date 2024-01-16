@@ -1,10 +1,11 @@
-FROM rust:1.31 AS wheel-part-rust
+FROM rust:1.75 AS wheel-part-rust
 
 WORKDIR /work
-COPY . .
+COPY Cargo.toml .
+COPY wheel-part.rs .
 
 RUN rustup update && \
-  rustup target add wasm32-unknown-unknown && \
+  rustup target add wasm32-wasi && \
   mkdir ../output && \
-  rustc --target wasm32-unknown-unknown -C opt-level=z -C lto --crate-type=cdylib -o ../output/wheel-part-rust.wasm wheel-part.rs && \
-  rm -rf /root/.rustup/*
+  cargo build --target wasm32-wasi --release && \
+  cp target/wasm32-wasi/release/wheel_part_rust.wasm ../output/wheel-part-rust.wasm
