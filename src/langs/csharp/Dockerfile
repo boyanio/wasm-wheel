@@ -1,9 +1,9 @@
 # Compile DotNetAnywhere's corlib and the wheel part to CIL (.dll)
-FROM mono:5.14 AS wheel-part-csharp-mono
+FROM mono:6.12.0.182 AS wheel-part-csharp-mono
 
 WORKDIR /work
 
-COPY . .
+COPY wheel-part.cs .
 
 RUN curl -SL https://github.com/boyanio/DotNetAnywhere/archive/master.tar.gz | tar xz && \
     mkdir ../output && \
