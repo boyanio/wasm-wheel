@@ -33,7 +33,7 @@ npm run wasm
 npm start
 ```
 
-You can then access the site on `http://localhost:8080`.
+You can then access the site on `https://localhost:8080`.
 
 You can re-build individual wheel parts by running
 
