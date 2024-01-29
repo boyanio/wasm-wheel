@@ -22,6 +22,7 @@ In theory, when compiling each language, the output wasm file should be almost i
 - Go
 - PHP
 - Python
+- Zig
 
 ## Getting started
 
@@ -85,6 +86,10 @@ The PHP interpreter is [compiled](https://github.com/oraoto/pib/) to WebAssembly
 ### Python
 
 [Pyodide](https://github.com/iodide-project/pyodide) brings the Python 3.8 runtime to the browser via WebAssembly, along with the Python scientific stack.
+
+### Zig
+
+[Zig](https://ziglang.org) includes support for all WebAssembly variants (emscripten, freestanding, WASI) out of the box.
 
 ## Questions & contribution
 

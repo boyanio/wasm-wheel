@@ -15,6 +15,7 @@ const langs = [
   'php',
   'python',
   'rust',
+  'zig',
 ];
 
 const isProduction = process.argv.some((x) => x === '--mode=production');
