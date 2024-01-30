@@ -10,6 +10,7 @@ const COLORS = [
   '#245a65',
   '#ff6a76',
   '#633d89',
+  '#ab8dae',
 ];
 const PI = Math.PI;
 const TAU = PI * 2;
