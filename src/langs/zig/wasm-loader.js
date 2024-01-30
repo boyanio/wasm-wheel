@@ -11,14 +11,16 @@ const utf8ToString = (heap, offset) => {
 
 const importObject = {
   env: {
-    jsrandom: Math.random,
+    seed: () => Math.random() * Number.MAX_SAFE_INTEGER,
   },
 };
+
+const onWasmInstantiated = (instance) => instance.exports._start();
 
 loadWheelPart(
   wasmFile,
   utf8ToString,
   importObject,
   { name: 'name', feelingLucky: 'feelingLucky' },
-  null
+  onWasmInstantiated
 );

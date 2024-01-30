@@ -1,4 +1,4 @@
-FROM kassany/bookworm-ziglang:latest AS wheel-part-zig
+FROM kassany/bookworm-ziglang:0.11.0 AS wheel-part-zig
 
 WORKDIR /work
 COPY . .
